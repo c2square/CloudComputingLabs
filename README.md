@@ -3,6 +3,7 @@
 <!--**This is the repo containing all the lab materials for undergraduate course CS06142 "Cloud Computing Techniques" at Hunan University**--> 
 ## 0. 说明
 此为HNU的2020陈果老师的云计算技术课程的实验,本组名称为**奥利给队**
+修改测试-贺飓兮
 ## 1. Overview
 
 There are **4 labs in total** in this course. All the materials of each lab are under folders Lab1-4 in this repo. Please clone the lab git repo onto your local computer,
