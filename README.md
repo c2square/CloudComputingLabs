@@ -3,8 +3,9 @@
 <!--**This is the repo containing all the lab materials for undergraduate course CS06142 "Cloud Computing Techniques" at Hunan University**--> 
 ## 0. 说明
 此为HNU的2020陈果老师的云计算技术课程的实验,本组名称为**奥利给队**
-我也来更改了——贺飓兮
+我也来更改了
 我加了一行-帕斯白
+hhhhhhh
 
 ## 1. Overview
 
