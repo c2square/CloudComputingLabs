@@ -122,7 +122,13 @@ Your program should be able to:
 2. Successfully solve the puzzles in the input file, and output the results in the format described before.
 3. Use multiple threads/processes to make use of most of your machine's CPU cores.
 
-\[Tips\]: 1) Use event queue to dispatch tasks and merge results to/from worker threads. 2) Dynamically detect how many CPU cores are there on your machine, in order to decide how many threads/processes your program uses. 3) Be careful about the contention among multiple threads/processes
+\[Tips\]: 
+
+1) Use event queue to dispatch tasks and merge results to/from worker threads. 
+
+2) Dynamically detect how many CPU cores are there on your machine, in order to decide how many threads/processes your program uses. 
+
+3) Be careful about the contention among multiple threads/processes
 
 ##### 3.1.3.2 Advanced version
 
@@ -132,7 +138,13 @@ Your program should be able to:
 2. Accept **any number of** input file names, and the size of input file can be **any large** (as long as it can be stored on your disk)
 3. When the program is solving puzzles in the previously input file(s), the program can **meanwhile accept more input file names from *stdin***.
 
-\[Tips\]: 1) Use a dedicated thread to accept input; 2) To avoid consuming all the memory, read different parts of the file into memory and solve them one by one; 3) You are encouraged to try more optimizations such as cache coherency processing.
+\[Tips\]: 
+
+1) Use a dedicated thread to accept input; 
+
+2) To avoid consuming all the memory, read different parts of the file into memory and solve them one by one; 
+
+3) You are encouraged to try more optimizations such as cache coherency processing.
 
 ### 3.2. Finish a performance test report
 
@@ -153,7 +165,3 @@ Please submit your lab program and performance test report following the guidanc
 
 1. You can get 38 points if you can: 1) finish all the requirements of the basic version, and 2) your performance test report has finished the two requirements described before. If you missed some parts, you will get part of the points depending how much you finished
 2. You can get 40 points (full score) if you can: 1) finish all the requirements of the advanced version, and 2) your performance test report has finished the two requirements described before. If you missed some parts, you will get part of the points depending how much you finished.
-
-##
-周大为有改动
-##
