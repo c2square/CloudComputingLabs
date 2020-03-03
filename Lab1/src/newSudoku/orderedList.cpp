@@ -16,7 +16,7 @@ using namespace std;
 class orderedList
 {
 private:
-    list<sudoku> buffer;
+    list<Sudoku> buffer;
     string nowId = "a";
     //判断两个id的大小，如果a>b就返回true 
     bool aBigerb(string a,string b);
@@ -65,12 +65,12 @@ void orderedList::add(Sudoku s)
         //缓冲区第一个需要输出，就输出并且更新下一个nowId
         if (buffer.front().id == nowId)
         {
-			for(int i=0;i<Sudoku.N;i++)
+			for(int i=0;i<Sudoku::N;i++)
 				cout << buffer.front().ans[i];
 			cout<<endl;
 			
             buffer.pop_front();
-            nowId = Sudoku.getNextId(nowId);
+            nowId = Sudoku::getNextId(nowId);
         }
         //缓冲区第一个不需要输出，结束循环 
         else

@@ -3,17 +3,22 @@ using namespace std;
 /*
 *这个类的使用方法：
 * 构造数独对象
-* int a[81]={1,2,3,...,9};
-* Sudoku one(a);
+* 特别注意！！！！！要在main 函数外面给Sudoku::first进行初始化,如下
+* bool Sudoku::first=true;
+* int main(){
+*   int a[81]={1,2,3,...,9};
+*   Sudoku one(a);
+* }
 */ 
+
 class Sudoku
 {
 public:
     //这个函数就是输入当前题目的id，得到下一个题目的id，用来保证id的唯一性 
     static string getNextId(string curId);
-    static bool first=true; 
+    static bool first; 
     static string nowId;
-	static const N=81;
+	static const int N=81;
     //sudoku是题目，ans是答案 
     string id;
     int *sudoku;
@@ -22,7 +27,7 @@ public:
     Sudoku(int problem[]);
 };
 //构造函数 
-Sudoku Sudoku::Sudoku(int problem[]){
+Sudoku::Sudoku(int problem[]){
 	//第一调用构造函数 
 	if(first)
 	{
@@ -32,14 +37,14 @@ Sudoku Sudoku::Sudoku(int problem[]){
 	}
 	//第二次及以后 
 	else{
-		id=Sudoku.getNextId(nowId);
+		id=Sudoku::getNextId(nowId);
 		nowId=id;
 	}
 	
 	sudoku=&problem[0];
 }
 //获取下一个id 
-string sudoku::getNextId(string cur){
+string Sudoku::getNextId(string cur){
     int i=cur.size()-1;
     while(true)
     {
