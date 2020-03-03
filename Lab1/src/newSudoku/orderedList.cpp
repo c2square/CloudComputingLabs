@@ -4,13 +4,13 @@
 #include "Sudoku.cpp"
 using namespace std;
 /*
-*¸ÃÀàµÄÊ¹ÓÃ·½·¨
+*è¯¥ç±»çš„ä½¿ç”¨æ–¹æ³•
 * orderedList outBuffer;
 * Sudoku s(problem);
-* string answerOfs="????...???"
-* //µÃµ½ÁËÊı¶ÀsµÄ´ğ°¸¾Í´æµ½sµÄansÊôĞÔÀï£¬
-* s.ans=answerOfs;
-* //È»ºóµ÷ÓÃoutBufferµÄadd()·½·¨,¾Í¿ÉÒÔ×Ô¶¯ÅÅĞò²¢°´idÊä³ö´ğ°¸ 
+* int answerOfs[Sudoku.N]={1,2,3,...,7,8,9};
+* //å¾—åˆ°äº†æ•°ç‹¬sçš„ç­”æ¡ˆå°±å­˜åˆ°sçš„anså±æ€§é‡Œï¼Œ
+* s.ans=&answerOfs[0];
+* //ç„¶åè°ƒç”¨outBufferçš„add()æ–¹æ³•,å°±å¯ä»¥è‡ªåŠ¨æ’åºå¹¶æŒ‰idè¾“å‡ºç­”æ¡ˆ 
 * outBuffer.add(s);
 */ 
 class orderedList
@@ -18,10 +18,10 @@ class orderedList
 private:
     list<sudoku> buffer;
     string nowId = "a";
-    //ÅĞ¶ÏÁ½¸öidµÄ´óĞ¡£¬Èç¹ûa>b¾Í·µ»Øtrue 
+    //åˆ¤æ–­ä¸¤ä¸ªidçš„å¤§å°ï¼Œå¦‚æœa>bå°±è¿”å›true 
     bool aBigerb(string a,string b);
 public:
-    //Ìí¼ÓÒ»¸öÊı¶Àµ½buffer£¨Êä³ö»º³åÇø£©²¢°´ÕÕidÅÅĞò £¬²¢¼ì²ébufferµÚÒ»¸öÔªËØÊÇ·ñÊÇĞèÒªÊä³ö 
+    //æ·»åŠ ä¸€ä¸ªæ•°ç‹¬åˆ°bufferï¼ˆè¾“å‡ºç¼“å†²åŒºï¼‰å¹¶æŒ‰ç…§idæ’åº ï¼Œå¹¶æ£€æŸ¥bufferç¬¬ä¸€ä¸ªå…ƒç´ æ˜¯å¦æ˜¯éœ€è¦è¾“å‡º 
     void add(Sudoku s);
 };
 // 
@@ -32,44 +32,47 @@ bool orderedList::aBigerb(string a,string b){
 
 void orderedList::add(Sudoku s)
 {
-    //²åÈëÊı¶Àµ½ÁĞ±íÖĞ£¨ÅÅºÃĞòµÄ²åÈë£© 
-    if (buffer.empty())//Èç¹ûÎª¿Õ·Åµ½×îºó 
+    //æ’å…¥æ•°ç‹¬åˆ°åˆ—è¡¨ä¸­ï¼ˆæ’å¥½åºçš„æ’å…¥ï¼‰ 
+    if (buffer.empty())//å¦‚æœä¸ºç©ºæ”¾åˆ°æœ€å 
         buffer.push_back(s);
-    else//²»È»¾ÍÕÒµ½µÚÒ»¸ö±ÈsµÄid´óµÄÔªËØtemp£¬²åÈëµ½tempµÄÇ°Ãæ 
+    else//ä¸ç„¶å°±æ‰¾åˆ°ç¬¬ä¸€ä¸ªæ¯”sçš„idå¤§çš„å…ƒç´ tempï¼Œæ’å…¥åˆ°tempçš„å‰é¢ 
     {
         list<Sudoku>::iterator it = buffer.begin();
         bool find = false;
         while (!find)
         {
-        	//ÕÒµ½×îºóÒ»¸ö¶¼Ã»ÓĞ±Ès´óµÄ£¬·Åµ½×îºó 
+        	//æ‰¾åˆ°æœ€åä¸€ä¸ªéƒ½æ²¡æœ‰æ¯”så¤§çš„ï¼Œæ”¾åˆ°æœ€å 
             if (it == buffer.end())
             {
                 buffer.push_back(s);
                 find = true;
             }
-			//ÕÒµ½ÁË±Ès´óµÄ£¬·Åµ½ËüµÄÇ°Ãæ 
+			//æ‰¾åˆ°äº†æ¯”så¤§çš„ï¼Œæ”¾åˆ°å®ƒçš„å‰é¢ 
             else if (aBigerb(it->id,s.id))
             {
                 buffer.insert(it, s);
                 find = true;
             }
-            //ÕÒÏÂÒ»¸ö 
+            //æ‰¾ä¸‹ä¸€ä¸ª 
             it++;
         }
     }
-    //Ñ­»·¼ì²é»º³åÇøµÚÒ»¸öÔªËØÊÇ·ñĞèÒªÊä³ö
+    //å¾ªç¯æ£€æŸ¥ç¼“å†²åŒºç¬¬ä¸€ä¸ªå…ƒç´ æ˜¯å¦éœ€è¦è¾“å‡º
     while(true)
     {
-    	//»º³åÇø¿ÕÁË 
+    	//ç¼“å†²åŒºç©ºäº† 
         if (buffer.empty()) break;
-        //»º³åÇøµÚÒ»¸öĞèÒªÊä³ö£¬¾ÍÊä³ö²¢ÇÒ¸üĞÂÏÂÒ»¸önowId
+        //ç¼“å†²åŒºç¬¬ä¸€ä¸ªéœ€è¦è¾“å‡ºï¼Œå°±è¾“å‡ºå¹¶ä¸”æ›´æ–°ä¸‹ä¸€ä¸ªnowId
         if (buffer.front().id == nowId)
         {
-            cout << buffer.front().ans << endl;
+			for(int i=0;i<Sudoku.N;i++)
+				cout << buffer.front().ans[i];
+			cout<<endl;
+			
             buffer.pop_front();
             nowId = Sudoku.getNextId(nowId);
         }
-        //»º³åÇøµÚÒ»¸ö²»ĞèÒªÊä³ö£¬½áÊøÑ­»· 
+        //ç¼“å†²åŒºç¬¬ä¸€ä¸ªä¸éœ€è¦è¾“å‡ºï¼Œç»“æŸå¾ªç¯ 
         else
             break;
     }

@@ -1,44 +1,44 @@
 #include<string>
 using namespace std;
 /*
-*Õâ¸öÀàµÄÊ¹ÓÃ·½·¨£º
-* ¹¹ÔìÊı¶À¶ÔÏó
+*è¿™ä¸ªç±»çš„ä½¿ç”¨æ–¹æ³•ï¼š
+* æ„é€ æ•°ç‹¬å¯¹è±¡
 * int a[81]={1,2,3,...,9};
 * Sudoku one(a);
 */ 
 class Sudoku
 {
 public:
-    //Õâ¸öº¯Êı¾ÍÊÇÊäÈëµ±Ç°ÌâÄ¿µÄid£¬µÃµ½ÏÂÒ»¸öÌâÄ¿µÄid£¬ÓÃÀ´±£Ö¤idµÄÎ¨Ò»ĞÔ 
+    //è¿™ä¸ªå‡½æ•°å°±æ˜¯è¾“å…¥å½“å‰é¢˜ç›®çš„idï¼Œå¾—åˆ°ä¸‹ä¸€ä¸ªé¢˜ç›®çš„idï¼Œç”¨æ¥ä¿è¯idçš„å”¯ä¸€æ€§ 
     static string getNextId(string curId);
     static bool first=true; 
     static string nowId;
-    //sudokuÊÇÌâÄ¿£¬ansÊÇ´ğ°¸ 
+	static const N=81;
+    //sudokuæ˜¯é¢˜ç›®ï¼Œansæ˜¯ç­”æ¡ˆ 
     string id;
     int *sudoku;
-    string ans;
-    //problem ¾ÍÊÇÊı¶ÀÌâÄ¿ 
+    int *ans;
+    //problem å°±æ˜¯æ•°ç‹¬é¢˜ç›® 
     Sudoku(int problem[]);
 };
-//¹¹Ôìº¯Êı 
+//æ„é€ å‡½æ•° 
 Sudoku Sudoku::Sudoku(int problem[]){
-	//µÚÒ»µ÷ÓÃ¹¹Ôìº¯Êı 
+	//ç¬¬ä¸€è°ƒç”¨æ„é€ å‡½æ•° 
 	if(first)
 	{
 		id="a";
 		nowId="a";
 		first=false;
 	}
-	//µÚ¶ş´Î¼°ÒÔºó 
+	//ç¬¬äºŒæ¬¡åŠä»¥å 
 	else{
 		id=Sudoku.getNextId(nowId);
 		nowId=id;
 	}
 	
 	sudoku=&problem[0];
-	ans=""; 
 }
-//»ñÈ¡ÏÂÒ»¸öid 
+//è·å–ä¸‹ä¸€ä¸ªid 
 string sudoku::getNextId(string cur){
     int i=cur.size()-1;
     while(true)
