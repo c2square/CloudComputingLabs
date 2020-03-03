@@ -1,0 +1,76 @@
+#include <list>
+#include <string>
+#include <iostream>
+#include "Sudoku.cpp"
+using namespace std;
+/*
+*该类的使用方法
+* orderedList outBuffer;
+* Sudoku s(problem);
+* string answerOfs="????...???"
+* //得到了数独s的答案就存到s的ans属性里，
+* s.ans=answerOfs;
+* //然后调用outBuffer的add()方法,就可以自动排序并按id输出答案 
+* outBuffer.add(s);
+*/ 
+class orderedList
+{
+private:
+    list<sudoku> buffer;
+    string nowId = "a";
+    //判断两个id的大小，如果a>b就返回true 
+    bool aBigerb(string a,string b);
+public:
+    //添加一个数独到buffer（输出缓冲区）并按照id排序 ，并检查buffer第一个元素是否是需要输出 
+    void add(Sudoku s);
+};
+// 
+bool orderedList::aBigerb(string a,string b){
+    if(a.size()==b.size()) return a>b;
+    else return a.size()>b.size();
+}
+
+void orderedList::add(Sudoku s)
+{
+    //插入数独到列表中（排好序的插入） 
+    if (buffer.empty())//如果为空放到最后 
+        buffer.push_back(s);
+    else//不然就找到第一个比s的id大的元素temp，插入到temp的前面 
+    {
+        list<Sudoku>::iterator it = buffer.begin();
+        bool find = false;
+        while (!find)
+        {
+        	//找到最后一个都没有比s大的，放到最后 
+            if (it == buffer.end())
+            {
+                buffer.push_back(s);
+                find = true;
+            }
+			//找到了比s大的，放到它的前面 
+            else if (aBigerb(it->id,s.id))
+            {
+                buffer.insert(it, s);
+                find = true;
+            }
+            //找下一个 
+            it++;
+        }
+    }
+    //循环检查缓冲区第一个元素是否需要输出
+    while(true)
+    {
+    	//缓冲区空了 
+        if (buffer.empty()) break;
+        //缓冲区第一个需要输出，就输出并且更新下一个nowId
+        if (buffer.front().id == nowId)
+        {
+            cout << buffer.front().ans << endl;
+            buffer.pop_front();
+            nowId = Sudoku.getNextId(nowId);
+        }
+        //缓冲区第一个不需要输出，结束循环 
+        else
+            break;
+    }
+}
