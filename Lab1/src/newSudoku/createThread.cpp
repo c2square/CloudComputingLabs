@@ -1,26 +1,26 @@
 #include<bits/stdc++.h>
 #include "../Sudoku/sudoku.h"
 using namespace std;
-/**Sudoku????
- * id??????
- * sudoku ???81??????
+/**Sudoku数据结构
+ * id序号
+ * sudoku 题目
  * */
 struct Sudoku{
     int id;
     int* sudoku;
 };
-/**questionList????
+/**questionList问题列表
  * */
 queue<Sudoku> questionList;
-/**???????
- * ???????????2???*/
+/**弹出第一个元素
+ * 合成一个函数，使其原子化*/
 Sudoku fontAndPop(queue<Sudoku> &questionList){
     Sudoku result=questionList.front();
     questionList.pop();
     return result;
 }
-/**????81??????
- * ???????
+/**创建随机数独
+ * 样例，不用管
  * */
 int* createSudoku(){
     static int result[N];
@@ -30,8 +30,8 @@ int* createSudoku(){
     }
     return result;
 }
-/**????sudoku??
- * ??????
+/**打印数独内容
+ * 格式
  * {id,xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
  * */
 void printfSudoku(Sudoku result){
@@ -42,8 +42,8 @@ void printfSudoku(Sudoku result){
         }
         printf("}\n");
 }
-/**?????????
- * ??????????????
+/**解数独函数
+ * 随便写的，用于测试
  * */
 void sudokuSolve(queue<Sudoku> questionList){
     Sudoku question;
@@ -60,12 +60,13 @@ void sudokuSolve(queue<Sudoku> questionList){
     }
 }
 int main(){
-    /**Windows?shell????c++????
-     * 1. cd????????
-     * 2. ?? g++ xxxx.cpp
-     * 3. ?? ./a.exe
+    /**Windows下shell编译运行c++文件的方法：
+     * 1. cd 到当前目录
+     * 2. 键入 g++ xxxx.cpp
+     * 3. 键入 ./a.exe
      */
-    /** ?????????
+    /** 生成问题列表
+
      * */
     for (int i = 0; i < 100; i++){
         Sudoku sudokuTmp={
