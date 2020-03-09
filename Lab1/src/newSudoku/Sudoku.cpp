@@ -19,6 +19,8 @@ public:
     static bool first; 
     static string nowId;
 	static const int N=81;
+    //测试用
+    static const int testN=9;
     //sudoku是题目，ans是答案 
     string id;
     int *sudoku;
@@ -65,4 +67,16 @@ string Sudoku::getNextId(string cur){
         }
     }
     return cur;
+}
+int main(){
+    Sudoku::first=true;
+    int problem[]={1,2,3,4,5,6,7,8,9};
+    for(int i=0;i<27;i++){
+        for(int i=0;i<27;i++){
+            Sudoku a(problem);
+            cout<<a.id<<' ';
+        }
+        cout<<endl;
+    }
+    //test id in order is right
 }

@@ -65,10 +65,14 @@ void orderedList::add(Sudoku s)
         //缓冲区第一个需要输出，就输出并且更新下一个nowId
         if (buffer.front().id == nowId)
         {
-			for(int i=0;i<Sudoku::N;i++)
-				cout << buffer.front().ans[i];
-			cout<<endl;
-			
+            //正式用
+			// for(int i=0;i<Sudoku::N;i++)
+			// 	cout << buffer.front().ans[i];
+			// cout<<endl;
+
+			//测试用
+            cout<<buffer.front().id<<endl;
+
             buffer.pop_front();
             nowId = Sudoku::getNextId(nowId);
         }
@@ -76,4 +80,31 @@ void orderedList::add(Sudoku s)
         else
             break;
     }
+}
+int main()
+{
+    Sudoku::first=true;
+    orderedList outBuffer;
+    int problem[]={1,2,3,4,5,6,7,8,9};
+    Sudoku *a[650];
+    //生产大量数独
+    for(int i=0;i<650;i++){
+        Sudoku t(problem);
+        a[i]=&t;
+    }
+    int t1,t2;
+    Sudoku *temp;
+    //打乱顺序加入队列
+    for(int i=0;i<65;i++){
+        for(int k=0;k<5;k++){
+            t1=rand()%10; t2=rand()%10;
+            temp=a[i*10+t1];
+            a[i*10+t1]=a[i*10+t2];
+            a[i*10+t2]=temp;
+        }
+        for(int k=0;k<10;k++)
+            outBuffer.add(*a[i*10+k]);
+    }
+    //输出测试时输出id，正式应用输出ans，如果按照id顺序输出，则测试正确
+
 }
