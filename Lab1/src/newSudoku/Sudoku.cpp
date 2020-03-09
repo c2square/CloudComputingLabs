@@ -15,7 +15,7 @@ class Sudoku
 {
 public:
     //这个函数就是输入当前题目的id，得到下一个题目的id，用来保证id的唯一性 
-    static string getNextId(string curId);
+    static string getNextId(string cur);
     static bool first; 
     static string nowId;
 	static const int N=81;
