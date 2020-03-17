@@ -1,6 +1,7 @@
 #include <list>
 #include <string>
 #include <iostream>
+#include <stdlib.h>
 #include "Sudoku.cpp"
 using namespace std;
 /*
@@ -32,6 +33,7 @@ bool orderedList::aBigerb(string a,string b){
 
 void orderedList::add(Sudoku s)
 {
+    //cout<<"insert "<<s.id<<endl;
     //插入数独到列表中（排好序的插入） 
     if (buffer.empty())//如果为空放到最后 
         buffer.push_back(s);
@@ -81,16 +83,18 @@ void orderedList::add(Sudoku s)
             break;
     }
 }
+//测试这个类的时候记得把Sukoku的main函数注释掉
+bool Sudoku::first=true;
+string Sudoku::nowId="";
 int main()
 {
-    Sudoku::first=true;
+    
     orderedList outBuffer;
     int problem[]={1,2,3,4,5,6,7,8,9};
     Sudoku *a[650];
     //生产大量数独
     for(int i=0;i<650;i++){
-        Sudoku t(problem);
-        a[i]=&t;
+        a[i]=new Sudoku(problem);
     }
     int t1,t2;
     Sudoku *temp;
@@ -106,5 +110,5 @@ int main()
             outBuffer.add(*a[i*10+k]);
     }
     //输出测试时输出id，正式应用输出ans，如果按照id顺序输出，则测试正确
-
+    return 0;
 }
