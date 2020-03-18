@@ -8,7 +8,7 @@ using namespace std;
 * bool Sudoku::first=true;
 * string nowId="";
 * int main(){
-*   int a[81]={1,2,3,...,9};
+*   string a="123.....89";
 *   Sudoku one(a);
 * }
 */
@@ -25,11 +25,10 @@ public:
     static const int testN = 9;
     //sudoku是题目，ans是答案
     string id;
-    int *sudoku;
-    int *ans;
+    string value;
 
     //构造函数
-    Sudoku(int problem[]);
+    Sudoku(string problem);
 };
 string Sudoku::getNextId(string cur)
 {
@@ -55,7 +54,7 @@ string Sudoku::getNextId(string cur)
     return cur;
 }
 //problem 就是数独题目
-Sudoku::Sudoku(int problem[])
+Sudoku::Sudoku(string problem)
 {
     //第一调用构造函数
     if (first)
@@ -71,14 +70,14 @@ Sudoku::Sudoku(int problem[])
         nowId = id;
     }
 
-    sudoku = &problem[0];
+    value = problem;
 }
 //测试这个类就把下面的注释解除。测试orderedList类就保持注释
 /*bool Sudoku::first = true;
 string Sudoku::nowId = "";
 int main()
 {
-    int problem[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    string problem = "123456789";
     for (int i = 0; i < 27; i++)
     {
         for (int i = 0; i < 27; i++)

@@ -5,12 +5,12 @@
 #include "Sudoku.cpp"
 using namespace std;
 /*
-*该类的使用方法
+*该类的使用方法,注意要看Sudoku的注释
 * orderedList outBuffer;
 * Sudoku s(problem);
-* int answerOfs[Sudoku.N]={1,2,3,...,7,8,9};
+* string answerOfs="123...89";
 * //得到了数独s的答案就存到s的ans属性里，
-* s.ans=&answerOfs[0];
+* s.value=answerOfs;
 * //然后调用outBuffer的add()方法,就可以自动排序并按id输出答案 
 * outBuffer.add(s);
 */ 
@@ -67,9 +67,9 @@ void orderedList::add(Sudoku s)
         //缓冲区第一个需要输出，就输出并且更新下一个nowId
         if (buffer.front().id == nowId)
         {
-            //正式用
+            // //正式用
 			// for(int i=0;i<Sudoku::N;i++)
-			// 	cout << buffer.front().ans[i];
+			// 	cout << buffer.front().value;
 			// cout<<endl;
 
 			//测试用
@@ -83,14 +83,15 @@ void orderedList::add(Sudoku s)
             break;
     }
 }
+//下面是测试
 //测试这个类的时候记得把Sukoku的main函数注释掉
+/*
 bool Sudoku::first=true;
 string Sudoku::nowId="";
 int main()
 {
-    
     orderedList outBuffer;
-    int problem[]={1,2,3,4,5,6,7,8,9};
+    string problem="123456789";
     Sudoku *a[650];
     //生产大量数独
     for(int i=0;i<650;i++){
@@ -112,3 +113,4 @@ int main()
     //输出测试时输出id，正式应用输出ans，如果按照id顺序输出，则测试正确
     return 0;
 }
+*/
