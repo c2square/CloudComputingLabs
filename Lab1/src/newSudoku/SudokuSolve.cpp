@@ -144,23 +144,33 @@ int su(int *a,int *b)
 }
 
 int main()
-{     
-    int problem[81];  
-        for(int i=0;i<9;i++)
+{    
+    int problem1[81];
+    int problem2[81];  
+         for(int i=0;i<9;i++)
         {
             for(int j=0;j<9;j++)
-               cin>>problem[i*9+j];
-        }
-	   su(a,problem);     
-	   for(int i=0;i<9;i++)
+            {
+            	  cin>>problem1[i*9+j];
+		 problem2[i*9+j]=problem1[i*9+j];
+			}				
+        }     	     
+//解数独函数调用1000次
+        for(int j=0;j<1000;j++)
+        {
+          su(a,problem1);
+		for(int i=0;i<81;i++)
+		{problem1[i]=problem2[i];}//每次解完数独将其回归成未解数独
+	}
+		
+  	for(int i=0;i<9;i++)
         {
         for(int j=0;j<9;j++)
         {
-        if(j!=0) putchar(' ');
-            cout<<problem[i*9+j];
-       }
-            putchar('\n');
-        } 
+        if(j!=0);
+            cout<<problem1[i*9+j];
+        }
+        }
 }
 /* 
 4 0 0 0 7 0 1 0 0
@@ -172,4 +182,14 @@ int main()
 0 1 4 0 0 0 8 0 6
 0 2 0 0 0 0 3 0 0
 6 0 0 0 9 0 0 0 0
+//下面也是一个数独
+0 0 0 0 0 0 0 1 0 
+4 0 0 0 0 0 0 0 0
+0 2 0 0 0 0 0 0 0
+0 0 0 0 5 0 6 0 4 
+0 0 8 0 0 0 3 0 0 
+0 0 1 0 9 0 0 0 0 
+3 0 0 4 0 0 2 0 0 
+0 5 0 1 0 0 0 0 0 
+0 0 0 8 0 7 0 0 0 
 */
