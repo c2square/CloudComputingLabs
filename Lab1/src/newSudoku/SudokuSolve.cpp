@@ -260,8 +260,8 @@ int main()
     start = clock();
     for(int i=0;i<1000;i++)
     {
-    	solve_sudoku(n);
-    	s.value=b;
+	    s.value=b;
+    	solve(n);
 	}
     end = clock();
     cout<<(*n).value<<endl;
