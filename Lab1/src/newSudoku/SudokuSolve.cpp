@@ -3,6 +3,8 @@
 #include <vector>
 #include <sstream>
 #include "Sudoku.cpp"
+#include<cmath>
+#include<time.h>
 using namespace std;
 struct Node{
     Node *up, *down, *left, *right, *colRoot, *rowRoot;//上下左右四个指针以及指向行列对象的指针
@@ -243,3 +245,30 @@ void solve(Sudoku *n)
     	ss>>(*n).value[ix];
 	}
 }
+bool Sudoku::first = true;
+string Sudoku::nowId = "";
+int main()
+{
+	string value;
+	string b;
+	Sudoku s(value);
+    cin>>s.value;
+    b=s.value;
+	Sudoku *n;
+	n=&s;
+	clock_t start,end;
+    start = clock();
+    for(int i=0;i<1000;i++)
+    {
+    	solve_sudoku(n);
+    	s.value=b;
+	}
+    end = clock();
+    cout<<(*n).value<<endl;
+    cout<<(end-start)<<"ms"; 
+}
+/* 
+027380010010006735000000029305692080000000000060174503640000000951800070080065340
+000000520080400000030009000501000600200700000000300000600010000000000704000000030
+800000000003600000070090200050007000000045700000100030001000068008500010090000400
+*/ 
