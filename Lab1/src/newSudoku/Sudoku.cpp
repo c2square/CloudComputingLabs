@@ -9,7 +9,10 @@ using namespace std;
 * string nowId="";
 * int main(){
 *   string a="123.....89";
-*   Sudoku one(a);
+*   string filename="t1,txt"
+*   Sudoku one(a,false);
+*   //如果是文件就这样
+*   Sudoku two(filename,true);
 * }
 */
 
@@ -26,9 +29,9 @@ public:
     //sudoku是题目，ans是答案
     string id;
     string value;
-
+    bool ifFile;
     //构造函数
-    Sudoku(string problem);
+    Sudoku(string problem,bool isfile);
 };
 string Sudoku::getNextId(string cur)
 {
@@ -53,8 +56,8 @@ string Sudoku::getNextId(string cur)
     }
     return cur;
 }
-//problem 就是数独题目
-Sudoku::Sudoku(string problem)
+//problem 就是数独题目,isfile是用来区分这是题目还是文件
+Sudoku::Sudoku(string problem,bool isfile)
 {
     //第一调用构造函数
     if (first)
@@ -71,6 +74,7 @@ Sudoku::Sudoku(string problem)
     }
 
     value = problem;
+    ifFile = isfile;
 }
 //测试这个类就把下面的注释解除。测试orderedList类就保持注释
 /*bool Sudoku::first = true;
@@ -82,7 +86,7 @@ int main()
     {
         for (int i = 0; i < 27; i++)
         {
-            Sudoku a(problem);
+            Sudoku a(problem,false);
             cout << a.id << ' ';
         }
         cout << endl;

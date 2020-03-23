@@ -74,7 +74,6 @@ void orderedList::add(Sudoku s)
 
 			//测试用
             cout<<buffer.front().id<<endl;
-
             buffer.pop_front();
             nowId = Sudoku::getNextId(nowId);
         }
@@ -85,7 +84,7 @@ void orderedList::add(Sudoku s)
 }
 //下面是测试
 //测试这个类的时候记得把Sukoku的main函数注释掉
-/*
+
 bool Sudoku::first=true;
 string Sudoku::nowId="";
 int main()
@@ -95,7 +94,7 @@ int main()
     Sudoku *a[650];
     //生产大量数独
     for(int i=0;i<650;i++){
-        a[i]=new Sudoku(problem);
+        a[i]=new Sudoku(problem,false);
     }
     int t1,t2;
     Sudoku *temp;
@@ -113,4 +112,3 @@ int main()
     //输出测试时输出id，正式应用输出ans，如果按照id顺序输出，则测试正确
     return 0;
 }
-*/
