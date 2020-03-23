@@ -245,28 +245,28 @@ void solve(Sudoku *n)
     	ss>>(*n).value[ix];
 	}
 }
-bool Sudoku::first = true;
-string Sudoku::nowId = "";
-int main()
-{
-	string value;
-	string b;
-	Sudoku s(value);
-    cin>>s.value;
-    b=s.value;
-	Sudoku *n;
-	n=&s;
-	clock_t start,end;
-    start = clock();
-    for(int i=0;i<1000;i++)
-    {
-	    s.value=b;
-    	solve(n);
-	}
-    end = clock();
-    cout<<(*n).value<<endl;
-    cout<<(end-start)<<"ms"; 
-}
+// bool Sudoku::first = true;
+// string Sudoku::nowId = "";
+// int main()
+// {
+// 	string value;
+// 	string b;
+// 	Sudoku s(value);
+//     cin>>s.value;
+//     b=s.value;
+// 	Sudoku *n;
+// 	n=&s;
+// 	clock_t start,end;
+//     start = clock();
+//     for(int i=0;i<1000;i++)
+//     {
+// 	    s.value=b;
+//     	solve(n);
+// 	}
+//     end = clock();
+//     cout<<(*n).value<<endl;
+//     cout<<(end-start)<<"ms"; 
+// }
 /* 
 027380010010006735000000029305692080000000000060174503640000000951800070080065340
 000000520080400000030009000501000600200700000000300000600010000000000704000000030
