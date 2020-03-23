@@ -1,99 +1,126 @@
-#include <stdio.h>  
-#include <malloc.h>
-#include <stdlib.h>
-#include <string.h> 
-  
-typedef struct Sudoku  
-{  
-    int data;  
-    struct Sudoku* next;  
-}Sudoku;    
- 
-//初始化   
-Sudoku* NewQueue()  
-{  
-    Sudoku* LQ = (Sudoku*)malloc(sizeof(Sudoku));  
-    LQ->data = 0;  
-    LQ->next = NULL;   
-} 
+#include <bits/stdc++.h>
+#include <pthread.h>
+#include <sys/types.h>
+#include "Sudoku.cpp"
+using namespace std;
 
-//进队   
-void Push(Sudoku* LQ, int data)  
-{  
-    int i;  
-    Sudoku* temp = NewQueue();  
-    temp->data = data;  
-    while(LQ->next != NULL)  
-    {  
-        LQ = LQ->next;  
-    }  
-    LQ->next = temp;  
+queue<Sudoku> problem;
+queue<Sudoku> problem1;
+queue<Sudoku> problem2;
+queue<Sudoku> problem3;
+
+typedef struct{
+    int first;
+    int last;
+}Multhread;
+
+int readtx(string file){//读文件到队列中
+    ifstream infile;
+    infile.open(file.data());//将文件流对象与文件连接起来
+    assert(infile.is_open());//若打开文件失败，则输出错误消息，并终止程序运行
+    string s;
+    while(getline(infile,s)){//按行读取数据
+        problem.push({s});//将每一行的数据压入队列中
+    }
+    infile.close();//关闭文件
+    return problem.size();//返回队列中元素队个数
 }
 
-//出队  
-Ele Pop(Sudoku * LQ)  
-{  
-    Sudoku * temp;  
-    int data;  
-      
-    if(LQ->next == NULL)  
-    {  
-        return data;  
-    }  
-    temp = LQ->next;  
-    data = temp->data;  
-    LQ->next = temp->next;  
-    free(temp);  
-    return data;      
+//下面是三个线程，从problem队列中分三部分提取到三个子队列中
+void* divide1(void *args){
+    Multhread* muk = (Multhread*) args;
+    int first=muk->first;
+    int last=muk->last;
+    for(int i=first;i<last;i++)
+    {
+        string s;
+        s=problem.front().value;
+        problem1.push({s});
+        problem.pop();
+    }
 }
 
-//是否为空   
-int IsEmpty(Sudoku * LQ)  
-{  
-    if(LQ->next == NULL)  
-    {  
-        return 1;  
-    }  
-    else  
-    {  
-        return 0;  
-    }  
+void* divide2(void *args){
+    Multhread* muk = (Multhread*) args;
+    int first=muk->first;
+    int last=muk->last;
+    for(int i=first;i<last;i++)
+    {
+        string s;
+        s=problem.front().value;
+        problem2.push({s});
+         problem.pop();
+    }
 }
 
-//遍历  
-void Traserval(Sudoku* LQ)  
-{  
-    printf("\n");  
-    while(LQ->next != NULL)   
-    {  
-        printf("%d\n", LQ->next->data);  
-        LQ = LQ->next;  
-    }  
+void* divide3(void *args){
+    Multhread* muk = (Multhread*) args;
+    int first=muk->first;
+    int last=muk->last;
+    for(int i=first;i<last;i++)
+    {
+        string s;
+        s=problem.front().value;
+        problem3.push({s});
+    }
 }
- 
-int main()  
-{  
-    Sudoku *LQ = NewQueue();
-	int size=10240;
-	char* s=(char*)malloc(size);
-	while(gets(s)!=NULL){//读取文件位置信息 
-		FILE *filp;
-		filp=fopen(s,"r");//打开文件为只读形式 
-	    if(filp){//判断打开文件是否成功 
-	    	char c;
-			int linelength=0;
-			while(!feof(filp))//读取文件的行数 
-			{
-				c=fgetc(filp);
-				if(c=='\n') linelength++;
-			}
-			for(int i=0;i<=linelength;i++)
-			{
-				int num[linelength+1];
-				fscanf(filp,"%d",&num[i]);
-				Push(LQ,num[i]);//将每一行的数据压入队列中 
-			} 
-		}
-	} 
-    return 0;  
-}  
+
+/*留出来的线程
+void* divide(void *args){
+
+}
+*/
+
+int main(int argc,char *argv[])
+{
+    string ss;
+    while(cin>>ss)//输入文件路径
+    {   
+        int sum=readtx(ss);//problem队列中元素队个数
+        //用三个线程来分发
+        pthread_t th[4];
+        Multhread thmuk[3];
+        for(int i=0;i<3;i++)
+        {
+            int first=(int)(sum/3)*i;
+            int last;
+            if(i!=2) last=(int)(sum/3)*(i+1);
+            else last=sum;
+            thmuk[i].first=first;
+            thmuk[i].last=last;
+            if(i==0){
+                if(pthread_create(&th[i],NULL,divide1,&thmuk[i])!=0)//线程创建
+                {
+                    perror("pthread_create failed");
+                    exit(1);
+                }
+            }
+            else if(i==1){
+                if(pthread_create(&th[i],NULL,divide2,&thmuk[i])!=0)
+                {
+                    perror("pthread_create failed");
+                    exit(1);
+                }
+            }
+            else if(i==2){
+                if(pthread_create(&th[i],NULL,divide3,&thmuk[i])!=0)
+                {
+                    perror("pthread_create failed");
+                    exit(1);
+                }
+            }
+        }
+
+        /*
+        留出来的线程
+        if(pthread_create(&th[3],NULL,divide,NULL)!=0)
+        {
+            perror("pthread_create failed");
+            exit(1);
+        }*/
+        
+        for(int i=0;i<3;i++)
+            pthread_join(th[i],NULL);
+        
+    }
+}

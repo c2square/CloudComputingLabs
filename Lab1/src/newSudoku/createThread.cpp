@@ -1,8 +1,18 @@
+<<<<<<< Updated upstream
 #include <iostream>
 #include <string>
 #include "ThreadPool.h"
+<<<<<<< Updated upstream
 // #include "Sudoku.cpp"
 #include "SudokuSolve.cpp"
+=======
+=======
+#include<bits/stdc++.h>
+#include <Windows.h>
+#include "Sudoku.cpp"
+#include "SudokuSolve.cpp"
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 using namespace std;
 
 bool Sudoku::first = true;
