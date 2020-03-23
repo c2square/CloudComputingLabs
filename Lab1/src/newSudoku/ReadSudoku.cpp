@@ -34,7 +34,15 @@ void* divide1(void *args){
     for(int i=first;i<last;i++)
     {
         string s;
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+        s=problem.front().value;//获取元素
+=======
         s=problem.front().value;
+>>>>>>> Stashed changes
+=======
+        s=problem.front().value;
+>>>>>>> Stashed changes
         problem1.push({s});
         problem.pop();
     }
