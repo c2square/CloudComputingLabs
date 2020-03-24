@@ -18,9 +18,15 @@ int readtx(string file){//读文件到队列中
     ifstream infile;
     infile.open(file.data());//将文件流对象与文件连接起来
     assert(infile.is_open());//若打开文件失败，则输出错误消息，并终止程序运行
+
+    //分离文件名，并将其压入队列中
+    string::size_type iPos = file.find_last_of('/')+1;
+    string filename = file.substr(iPos,file.length()-iPos);
+    problem.push({filename,1});
+
     string s;
     while(getline(infile,s)){//按行读取数据
-        problem.push({s});//将每一行的数据压入队列中
+        problem.push({s,0});//将每一行的数据压入队列中
     }
     infile.close();//关闭文件
     return problem.size();//返回队列中元素队个数
@@ -33,17 +39,7 @@ void* divide1(void *args){
     int last=muk->last;
     for(int i=first;i<last;i++)
     {
-        string s;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        s=problem.front().value;//获取元素
-=======
-        s=problem.front().value;
->>>>>>> Stashed changes
-=======
-        s=problem.front().value;
->>>>>>> Stashed changes
-        problem1.push({s});
+        problem1.push(problem.front());
         problem.pop();
     }
 }
@@ -54,10 +50,8 @@ void* divide2(void *args){
     int last=muk->last;
     for(int i=first;i<last;i++)
     {
-        string s;
-        s=problem.front().value;
-        problem2.push({s});
-         problem.pop();
+        problem2.push(problem.front());
+        problem.pop();
     }
 }
 
@@ -67,9 +61,7 @@ void* divide3(void *args){
     int last=muk->last;
     for(int i=first;i<last;i++)
     {
-        string s;
-        s=problem.front().value;
-        problem3.push({s});
+        problem3.push(problem.front());
     }
 }
 
