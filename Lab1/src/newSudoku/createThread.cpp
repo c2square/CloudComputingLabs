@@ -1,82 +1,51 @@
-<<<<<<< Updated upstream
-#include <iostream>
-#include <string>
-#include "ThreadPool.h"
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-// #include "Sudoku.cpp"
-#include "SudokuSolve.cpp"
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-#include<bits/stdc++.h>
-#include <Windows.h>
+#include <bits/stdc++.h>
 #include "Sudoku.cpp"
+// #include "ReadSudoku.cpp"
+#include "orderedList.cpp"
+#include <unistd.h>
 #include "SudokuSolve.cpp"
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 using namespace std;
+int numberOfThread=10;
+mutex mtx;
+orderedList outBuffer;
 
+queue<Sudoku> problems;
 bool Sudoku::first = true;
 string Sudoku::nowId = "";
-Sudoku * createShudokuList(){
-    string problem = "027380010010006735000000029305692080000000000060174503640000000951800070080065340";
-    Sudoku *sudokuList[10];
+
+void  createShudokuList(){
+    string pro = "027380010010006735000000029305692080000000000060174503640000000951800070080065340";
+    // string problem="";
     for(int i=0;i<10;i++){
-        sudokuList[i]=new Sudoku(problem);
-        // printf("%d%s\n",i,sudokuList[i].value.c_str());
+        // problem+=i+'0';
+        problems.push({pro,0}) ;
+        // printf("%d %s\n",i,sudokuList[i].value.c_str());
     }
-    return * sudokuList;
 }
+void *text(void *arg){
+    queue<Sudoku> i=* (queue<Sudoku> *) arg;
+    printf("This tid is %lu\n", pthread_self());
+    printf("This sudoku is OX%p\n",&i);
+    while (problems.size())
+    {
+        solve(&problems.front());
+        outBuffer.add(problems.front());
+        printf("This is number of %s\n",problems.front().value.c_str());
+        problems.pop();
+    }
+}
+
 int main()
 {
-    Sudoku *sudokuList=createShudokuList();
-    for(int i=0;i<10;i++){
-        printf("%d%s\n",i,sudokuList[i].value.c_str());
+    createShudokuList();
+    for(int i=0;i<numberOfThread;i++){
+        printf("\nThe time is %d\n",i);
+        pthread_t th1;
+        if(pthread_create(&th1, NULL, text, (void *)&problems)!=0)
+        {
+            perror("pthread_create failed");
+            exit(1);
+        }
+        sleep(1);
     }
-    // std::mutex mtx;
-    //     std::ThreadPool tp;
-    //     std::vector<std::future<int>> v;
-    //     std::vector<std::future<void>> v1;
-    //     for (int i = 0; i <= 10; ++i)
-    //     {
-    //         auto ans = tp.add([](int answer) { return answer; }, i);
-    //         v.push_back(std::move(ans));
-    //     }
-    //     for (int i = 0; i <= 5; ++i)
-    //     {
-    //         auto ans = tp.add([&mtx](const std::string& str1, const std::string& str2)
-    //         {
-    //             std::lock_guard<std::mutex> lg(mtx);
-    //             std::cout << (str1 + str2) << std::endl;
-    //             return;
-    //         }, "hello ", "world");
-    //         v1.push_back(std::move(ans));
-    //     }
-    //     for (size_t i = 0; i < v.size(); ++i)
-    //     {
-    //         std::lock_guard<std::mutex> lg(mtx);
-    //         cout << v[i].get() << endl;
-    //     }
-    //     for (size_t i = 0; i < v1.size(); ++i)
-    //     {
-    //         v1[i].get();
-    //     }
-
 }
