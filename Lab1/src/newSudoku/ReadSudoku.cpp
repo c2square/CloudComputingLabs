@@ -2,16 +2,17 @@
 #include <pthread.h>
 #include <sys/types.h>
 #include "Sudoku.cpp"
+#define DNUM 1000000
+
 using namespace std;
 
 queue<Sudoku> problem;
-queue<Sudoku> problem1;
-queue<Sudoku> problem2;
-queue<Sudoku> problem3;
+queue<Sudoku> sproblem[DNUM];
 
 typedef struct{
     int first;
     int last;
+    int numbersqueue;//分发的子队列数
 }Multhread;
 
 int readtx(string file){//读文件到队列中
@@ -32,94 +33,49 @@ int readtx(string file){//读文件到队列中
     return problem.size();//返回队列中元素队个数
 }
 
-//下面是三个线程，从problem队列中分三部分提取到三个子队列中
-void* divide1(void *args){
-    Multhread* muk = (Multhread*) args;
-    int first=muk->first;
-    int last=muk->last;
-    for(int i=first;i<last;i++)
-    {
-        problem1.push(problem.front());
-        problem.pop();
-    }
-}
-
-void* divide2(void *args){
-    Multhread* muk = (Multhread*) args;
-    int first=muk->first;
-    int last=muk->last;
-    for(int i=first;i<last;i++)
-    {
-        problem2.push(problem.front());
-        problem.pop();
-    }
-}
-
-void* divide3(void *args){
-    Multhread* muk = (Multhread*) args;
-    int first=muk->first;
-    int last=muk->last;
-    for(int i=first;i<last;i++)
-    {
-        problem3.push(problem.front());
-    }
-}
-
-/*留出来的线程
+//创建线程队同时创建一个子队列，从problem队列中取一部分数
 void* divide(void *args){
-
+    Multhread* muk = (Multhread*) args;
+    int first=muk->first;//截取problem队列中元素的开始位置
+    int last=muk->last;//截取problem队列中元素的结束位置
+    int numbersqueue=muk->numbersqueue;
+    for(int i=first;i<last;i++){
+        sproblem[numbersqueue].push(problem.front());
+        problem.pop();
+    }
 }
-*/
 
 int main(int argc,char *argv[])
 {
     string ss;
+    
     while(cin>>ss)//输入文件路径
     {   
         int sum=readtx(ss);//problem队列中元素队个数
-        //用三个线程来分发
-        pthread_t th[4];
-        Multhread thmuk[3];
-        for(int i=0;i<3;i++)
-        {
-            int first=(int)(sum/3)*i;
+
+        int threadnumber=1;//线程数量
+        if(argc>=2) threadnumber=atoi(argv[1]);
+        if(threadnumber>DNUM) threadnumber=DNUM;
+
+        pthread_t th[threadnumber];
+        Multhread thmuk[threadnumber];
+
+        for(int i=0;i<threadnumber;i++){
+            int first=(int)(sum/threadnumber)*i;
             int last;
-            if(i!=2) last=(int)(sum/3)*(i+1);
+            if(i!=2) last=(int)(sum/threadnumber)*(i+1);
             else last=sum;
             thmuk[i].first=first;
             thmuk[i].last=last;
-            if(i==0){
-                if(pthread_create(&th[i],NULL,divide1,&thmuk[i])!=0)//线程创建
-                {
-                    perror("pthread_create failed");
-                    exit(1);
-                }
-            }
-            else if(i==1){
-                if(pthread_create(&th[i],NULL,divide2,&thmuk[i])!=0)
-                {
-                    perror("pthread_create failed");
-                    exit(1);
-                }
-            }
-            else if(i==2){
-                if(pthread_create(&th[i],NULL,divide3,&thmuk[i])!=0)
-                {
-                    perror("pthread_create failed");
-                    exit(1);
-                }
+            thmuk[i].numbersqueue=i;//子队列的下标
+
+            if(pthread_create(&th[i],NULL,divide,&thmuk[i])!=0){
+                perror("pthread_create failed");
+                exit(1);
             }
         }
 
-        /*
-        留出来的线程
-        if(pthread_create(&th[3],NULL,divide,NULL)!=0)
-        {
-            perror("pthread_create failed");
-            exit(1);
-        }*/
-        
-        for(int i=0;i<3;i++)
+        for(int i=0;i<threadnumber;i++)
             pthread_join(th[i],NULL);
         
     }
