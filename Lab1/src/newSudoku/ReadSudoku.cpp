@@ -3,6 +3,7 @@
 #include <semaphore.h>
 #include <sys/types.h>
 #include "Sudoku.cpp"
+
 #define DNUM 1000000
 
 using namespace std;
