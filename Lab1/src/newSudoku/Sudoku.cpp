@@ -69,8 +69,11 @@ Sudoku::Sudoku(string problem)
     //第二次及以后
     else
     {
-        id = getNextId(nowId);
-        nowId = id;
+        if(problem!=""){
+            id = getNextId(nowId);
+            nowId = id;
+        }
+        
     }
 
     value = problem;
