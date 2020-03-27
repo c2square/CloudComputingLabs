@@ -1,8 +1,10 @@
 #include <list>
+#include <stdio.h>
 #include <string>
 #include <iostream>
 #include <stdlib.h>
 #include "Sudoku.cpp"
+#include <pthread.h>
 using namespace std;
 /*
 *该类的使用方法,注意要看Sudoku的注释
@@ -17,8 +19,9 @@ using namespace std;
 class orderedList
 {
 private:
+    pthread_mutex_t olock;
     list<Sudoku> buffer;
-    string nowId = "a";
+    string nowId = "0";
     //判断两个id的大小，如果a>b就返回true 
     bool aBigerb(string a,string b);
 public:
@@ -33,6 +36,7 @@ bool orderedList::aBigerb(string a,string b){
 
 void orderedList::add(Sudoku s)
 {
+    pthread_mutex_lock(&olock);
     //cout<<"insert "<<s.id<<endl;
     //插入数独到列表中（排好序的插入） 
     if (buffer.empty())//如果为空放到最后 
@@ -68,12 +72,10 @@ void orderedList::add(Sudoku s)
         if (buffer.front().id == nowId)
         {
             // //正式用
-			// for(int i=0;i<Sudoku::N;i++)
-			// 	cout << buffer.front().value;
-			// cout<<endl;
-
+			 	cout << buffer.front().value<<" ";
 			//测试用
             cout<<buffer.front().id<<endl;
+
             buffer.pop_front();
             nowId = Sudoku::getNextId(nowId);
         }
@@ -81,10 +83,10 @@ void orderedList::add(Sudoku s)
         else
             break;
     }
+    pthread_mutex_unlock(&olock);
 }
 //下面是测试
 //测试这个类的时候记得把Sukoku的main函数注释掉
-
 // bool Sudoku::first=true;
 // string Sudoku::nowId="";
 // int main()

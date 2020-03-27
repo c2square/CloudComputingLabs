@@ -30,9 +30,8 @@ public:
     //sudoku是题目，ans是答案
     string id;
     string value;
-    bool ifFile;
     //构造函数
-    Sudoku(string problem,bool isfile);
+    Sudoku(string problem);
 };
 string Sudoku::getNextId(string cur)
 {
@@ -41,12 +40,12 @@ string Sudoku::getNextId(string cur)
     {
         if (i == -1)
         {
-            cur = 'a' + cur;
+            cur = '1' + cur;
             break;
         }
-        if (cur[i] == 'z')
+        if (cur[i] == '9')
         {
-            cur[i] = 'a';
+            cur[i] = '0';
             i--;
         }
         else
@@ -58,13 +57,13 @@ string Sudoku::getNextId(string cur)
     return cur;
 }
 //problem 就是数独题目,isfile是用来区分这是题目还是文件
-Sudoku::Sudoku(string problem,bool isfile)
+Sudoku::Sudoku(string problem)
 {
     //第一调用构造函数
     if (first)
     {
-        id = "a";
-        nowId = "a";
+        id = "0";
+        nowId = "0";
         first = false;
     }
     //第二次及以后
@@ -75,7 +74,6 @@ Sudoku::Sudoku(string problem,bool isfile)
     }
 
     value = problem;
-    ifFile = isfile;
 }
 //测试这个类就把下面的注释解除。测试orderedList类就保持注释
 /*bool Sudoku::first = true;
