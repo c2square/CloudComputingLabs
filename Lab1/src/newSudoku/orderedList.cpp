@@ -1,7 +1,7 @@
 #include <list>
-#include <stdio.h>
 #include <string>
 #include <iostream>
+#include <fstream>
 #include <stdlib.h>
 #include "Sudoku.cpp"
 #include <pthread.h>
@@ -19,6 +19,7 @@ using namespace std;
 class orderedList
 {
 private:
+    //ofstream *output;
     pthread_mutex_t olock;
     list<Sudoku> buffer;
     string nowId = "0";
@@ -27,8 +28,15 @@ private:
 public:
     //添加一个数独到buffer（输出缓冲区）并按照id排序 ，并检查buffer第一个元素是否是需要输出 
     void add(Sudoku s);
+    orderedList();
 };
-// 
+//
+orderedList::orderedList(){
+    if(freopen("output.txt","w",stdout)==NULL)
+        cout<<"open file FAIL!"<<endl;
+    /*output=new ofstream("/src/newSudoku/output.txt");
+    if(!output->is_open()) cout<<"open file FAIL!"<<endl;*/
+}
 bool orderedList::aBigerb(string a,string b){
     if(a.size()==b.size()) return a>b;
     else return a.size()>b.size();
@@ -87,30 +95,31 @@ void orderedList::add(Sudoku s)
 }
 //下面是测试
 //测试这个类的时候记得把Sukoku的main函数注释掉
-// bool Sudoku::first=true;
-// string Sudoku::nowId="";
-// int main()
-// {
-//     orderedList outBuffer;
-//     string problem="123456789";
-//     Sudoku *a[650];
-//     //生产大量数独
-//     for(int i=0;i<650;i++){
-//         a[i]=new Sudoku(problem,false);
-//     }
-//     int t1,t2;
-//     Sudoku *temp;
-//     //打乱顺序加入队列
-//     for(int i=0;i<65;i++){
-//         for(int k=0;k<5;k++){
-//             t1=rand()%10; t2=rand()%10;
-//             temp=a[i*10+t1];
-//             a[i*10+t1]=a[i*10+t2];
-//             a[i*10+t2]=temp;
-//         }
-//         for(int k=0;k<10;k++)
-//             outBuffer.add(*a[i*10+k]);
-//     }
-//     //输出测试时输出id，正式应用输出ans，如果按照id顺序输出，则测试正确
-//     return 0;
-// }
+
+bool Sudoku::first=true;
+string Sudoku::nowId="";
+int main()
+{
+    orderedList outBuffer;
+    string problem="123456789";
+    Sudoku *a[650];
+    //生产大量数独
+    for(int i=0;i<650;i++){
+        a[i]=new Sudoku(problem);
+    }
+    int t1,t2;
+    Sudoku *temp;
+    //打乱顺序加入队列
+    for(int i=0;i<65;i++){
+        for(int k=0;k<5;k++){
+            t1=rand()%10; t2=rand()%10;
+            temp=a[i*10+t1];
+            a[i*10+t1]=a[i*10+t2];
+            a[i*10+t2]=temp;
+        }
+        for(int k=0;k<10;k++)
+            outBuffer.add(*a[i*10+k]);
+    }
+    //输出测试时输出id，正式应用输出ans，如果按照id顺序输出，则测试正确
+    return 0;
+}
