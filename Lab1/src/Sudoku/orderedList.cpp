@@ -80,9 +80,9 @@ void orderedList::add(Sudoku s)
         if (buffer.front().id == nowId)
         {
             // //正式用
-			 	cout << buffer.front().value<<" ";
+			 	cout << buffer.front().value<<endl;
 			//测试用
-            cout<<buffer.front().id<<endl;
+            // cout<<buffer.front().id<<endl;
 
             buffer.pop_front();
             nowId = Sudoku::getNextId(nowId);
