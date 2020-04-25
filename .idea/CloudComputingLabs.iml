@@ -9,5 +9,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="netty-all-4.1.48.Final" level="project" />
     <orderEntry type="library" name="fastjson-1.2.58" level="project" />
+    <orderEntry type="library" name="mockwebserver-4.5.0" level="project" />
+    <orderEntry type="library" name="okhttp-3.9.0" level="project" />
+    <orderEntry type="library" name="okio-1.13.0" level="project" />
   </component>
 </module>
