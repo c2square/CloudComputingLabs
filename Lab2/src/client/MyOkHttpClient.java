@@ -3,8 +3,6 @@ package client;
 import okhttp3.*;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * @author csqure
@@ -13,6 +11,7 @@ import java.util.concurrent.Executors;
 public class MyOkHttpClient {
     /**唯一一个客户端对象，使用它来进行发送HTTP请求*/
     final static OkHttpClient client=new OkHttpClient();
+
     /**
      * 这是GET方法的调用
      * @param url 所输入的URL地址
@@ -31,18 +30,23 @@ public class MyOkHttpClient {
              * */
             Response response=call.execute();
             /**返回的是回应头和回应体*/
-//            System.out.println(response.headers()+"\n"+response.body().string());
+            System.out.println(response.headers()+"\n"+response.body().string());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public static void PostMethod(String url){
+
+    /**这是post方法
+     * @param url 要请求的网址
+     * @param name 用户名字
+     * @param id 用户id*/
+    public static void PostMethod(String url,String name,String id){
         /**POST方法要构造请求体，使用这种简单的方法就行
          * .add(key,value)
          * 这代表着xxxxx.com/?key=value*/
         RequestBody formBody = new FormBody.Builder()
-                .add("page", "1")
-                .add("tag", "java")
+                .add("Name", name)
+                .add("ID", id)
                 .build();
         /**这是对请求的构造
          * .post(RequestBody)构造了POST方法
@@ -56,26 +60,30 @@ public class MyOkHttpClient {
         try {
             Response response=call.execute();
             /**返回的是回应头和回应体*/
-//            System.out.println(response.headers()+"\n"+response.body().string());
+            System.out.println(response.headers()+"\n"+response.body().string());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
     public static void main(String[] args) {
 
-        GetMethod("http://www.baidu.com");
-        PostMethod("http://www.mawen.co");
-        ExecutorService pool = Executors.newFixedThreadPool(6);
-        Runnable myThread = () -> {
-            for (int i = 0; i < 100; i++) {
-                System.out.println(i);
-                GetMethod("http://www.baidu.com");
-            }
-        };
-        // 向线程池中提交两个线程
-        pool.submit(myThread);
-        pool.submit(myThread);
-        // 关闭线程池
-        pool.shutdown();
+        GetMethod("http://127.0.0.1:7397");
+        PostMethod("http://127.0.0.1:7397/Post_show","HNU","cs1024");
+
+
+//        ExecutorService pool = Executors.newFixedThreadPool(6);
+//        Runnable myThread = () -> {
+//            for (int i = 0; i < 100; i++) {
+//                System.out.println(i);
+//                GetMethod("http://www.baidu.com");
+//            }
+//        };
+//        // 向线程池中提交两个线程
+//        pool.submit(myThread);
+//        pool.submit(myThread);
+//        // 关闭线程池
+//        pool.shutdown();
     }
 }

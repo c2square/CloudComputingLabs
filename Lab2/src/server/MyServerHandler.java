@@ -34,14 +34,12 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
                 // 2.获取请求体
                 ByteBuf buf = req.content();
                 String content = buf.toString(CharsetUtil.UTF_8);
-
                 // 3.获取请求方法
                 HttpMethod method = req.method();
-
                 // 4.获取请求头
                 HttpHeaders headers = req.headers();
-
                 // 5.根据method，确定不同的逻辑
+                System.out.println(method+"\n"+headers+"\n"+content);
                 if(method.equals(HttpMethod.GET)){
 
                     // TODO 
@@ -52,7 +50,6 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
                     Content c = new Content();
                     c.setUri(uri);
                     c.setContent(content);
-
                     response(ctx, c);
                 }
 
