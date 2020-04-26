@@ -54,11 +54,11 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
                 }
 
                 if(method.equals(HttpMethod.PUT)){
-                    // TODO 
+                    PutAnswer(ctx);
                 }
 
                 if(method.equals(HttpMethod.DELETE)){
-                    // TODO 
+                    DeleteAnswer(ctx);
                 }
             } finally {
                 req.release();
@@ -79,6 +79,42 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
         // 注意必须在使用完之后，close channel
         ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
     }
+    
+        private void PutAnswer(ChannelHandlerContext ctx){
+        String c= new String();
+        c=      "\r\nServer: lib2's Web Server"+
+                "\r\nContent-type: text/html"+
+                "\r\nContent-length:170"+
+                "\r\n"+
+                "\r\n<html><title>501 Not Implemented</title><body bgcolor=ffffff>"+
+                "\r\n Not Implemented"+
+                "\r\n<p>Does not implement this method: PUT"+
+                "\r\n<hr><em>HTTP Web server</em>"+
+                "\r\n</body></html>";
+        FullHttpResponse resp = new DefaultFullHttpResponse(
+            HttpVersion.HTTP_1_0,
+            HttpResponseStatus.NOT_IMPLEMENTED,
+            Unpooled.copiedBuffer(c,CharsetUtil.UTF_8));
+        ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
+    }
+    private void DeleteAnswer(ChannelHandlerContext ctx){
+        String c= new String();
+        c=      "\r\nServer: lib2's Web Server"+
+                "\r\nContent-type: text/html"+
+                "\r\nContent-length:170"+
+                "\r\n"+
+                "\r\n<html><title>501 Not Implemented</title><body bgcolor=ffffff>"+
+                "\r\n Not Implemented"+
+                "\r\n<p>Does not implement this method: DELETE"+
+                "\r\n<hr><em>HTTP Web server</em>"+
+                "\r\n</body></html>";
+        FullHttpResponse resp = new DefaultFullHttpResponse(
+                HttpVersion.HTTP_1_0,
+                HttpResponseStatus.NOT_IMPLEMENTED,
+                Unpooled.copiedBuffer(c,CharsetUtil.UTF_8));
+        ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
+    }
+    
     class Content{
         String uri;
         String content;
