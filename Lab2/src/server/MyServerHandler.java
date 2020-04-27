@@ -80,38 +80,36 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
         ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
     }
     
-        private void PutAnswer(ChannelHandlerContext ctx){
+    private void PutAnswer(ChannelHandlerContext ctx){
         String c= new String();
-        c=      "\r\nServer: lib2's Web Server"+
-                "\r\nContent-type: text/html"+
-                "\r\nContent-length:170"+
-                "\r\n"+
-                "\r\n<html><title>501 Not Implemented</title><body bgcolor=ffffff>"+
+        c=      "\r\n<html><title>501 Not Implemented</title><body bgcolor=ffffff>"+
                 "\r\n Not Implemented"+
                 "\r\n<p>Does not implement this method: PUT"+
                 "\r\n<hr><em>HTTP Web server</em>"+
                 "\r\n</body></html>";
         FullHttpResponse resp = new DefaultFullHttpResponse(
-            HttpVersion.HTTP_1_0,
-            HttpResponseStatus.NOT_IMPLEMENTED,
-            Unpooled.copiedBuffer(c,CharsetUtil.UTF_8));
+                HttpVersion.HTTP_1_1,
+                HttpResponseStatus.NOT_IMPLEMENTED,
+                Unpooled.copiedBuffer(c,CharsetUtil.UTF_8));
+        resp.headers().set(HttpHeaderNames.SERVER, "lib'2 Web Server");
+        resp.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html");
+        resp.headers().set(HttpHeaderNames.CONTENT_LANGUAGE, "170");
         ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
     }
     private void DeleteAnswer(ChannelHandlerContext ctx){
-        String c= new String();
-        c=      "\r\nServer: lib2's Web Server"+
-                "\r\nContent-type: text/html"+
-                "\r\nContent-length:170"+
-                "\r\n"+
-                "\r\n<html><title>501 Not Implemented</title><body bgcolor=ffffff>"+
+        String d= new String();
+        d=      "\r\n<html><title>501 Not Implemented</title><body bgcolor=ffffff>"+
                 "\r\n Not Implemented"+
                 "\r\n<p>Does not implement this method: DELETE"+
                 "\r\n<hr><em>HTTP Web server</em>"+
                 "\r\n</body></html>";
         FullHttpResponse resp = new DefaultFullHttpResponse(
-                HttpVersion.HTTP_1_0,
+                HttpVersion.HTTP_1_1,
                 HttpResponseStatus.NOT_IMPLEMENTED,
-                Unpooled.copiedBuffer(c,CharsetUtil.UTF_8));
+                Unpooled.copiedBuffer(d,CharsetUtil.UTF_8));
+        resp.headers().set(HttpHeaderNames.SERVER, "lib'2 Web Server");
+        resp.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html");
+        resp.headers().set(HttpHeaderNames.CONTENT_LANGUAGE, "170");
         ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
     }
     
