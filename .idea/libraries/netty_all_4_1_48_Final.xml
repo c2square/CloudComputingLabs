@@ -6,6 +6,7 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$PROJECT_DIR$/Lab2/lib/netty-all-4.1.48.Final.jar!/" />
+      <root url="jar://$USER_HOME$/.ideaLibSources/netty-all-4.1.48.Final-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

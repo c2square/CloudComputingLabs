@@ -66,12 +66,34 @@ public class MyOkHttpClient {
         }
     }
 
-
+    public static void PutMethod(String url){
+        FormBody body = new FormBody.Builder()
+                .add("communityId", String.valueOf(123))
+                .build();
+        /**构建HTTP请求，默认为GET方法
+         * */
+        Request request=new Request.Builder()
+                .url(url)
+                .put(body)
+                .build();
+        /**调用准备
+         * */
+        Call call=client.newCall(request);
+        try {
+            /**执行并返回结果
+             * */
+            Response response=call.execute();
+            /**返回的是回应头和回应体*/
+            System.out.println(response.message()+"\n"+response.headers()+"\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public static void main(String[] args) {
 
-        GetMethod("http://127.0.0.1:7397");
+//        GetMethod("http://127.0.0.1:7397");
         PostMethod("http://127.0.0.1:7397/Post_show","HNU","cs1024");
-
+//        PutMethod("http://127.0.0.1:7397");
 
 //        ExecutorService pool = Executors.newFixedThreadPool(6);
 //        Runnable myThread = () -> {
