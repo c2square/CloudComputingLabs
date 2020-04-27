@@ -39,18 +39,35 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
                 // 4.获取请求头
                 HttpHeaders headers = req.headers();
                 // 5.根据method，确定不同的逻辑
-                System.out.println(method+"\n"+headers+"\n"+content);
+
                 if(method.equals(HttpMethod.GET)){
 
                     // TODO 
                 }
 
                 if(method.equals(HttpMethod.POST)){
-                    // 接收用户输入，并将输入返回给用户
-                    Content c = new Content();
-                    c.setUri(uri);
-                    c.setContent(content);
-                    response(ctx, c);
+
+                    if (!("/Post_show".equals(uri))){
+                        postNotFoundError(ctx);
+                        System.out.println("uri error "+uri);
+                    }else {
+                        String[] tmp0=content.split("&");
+                        if (tmp0.length!=2){
+                            postNotFoundError(ctx);
+                            System.out.println("val length error"+content);
+                        }else {
+                            String[] NameAndVal=tmp0[0].split("=");
+                            String[] IDAndVal=tmp0[1].split("=");
+                            if ("Name".equals(NameAndVal[0])&&"ID".equals(IDAndVal[0])){
+                                PostHandleSuccess(ctx, NameAndVal[1],IDAndVal[1]);
+
+                            }else {
+                                postNotFoundError(ctx);
+                                System.out.println("val  error "+NameAndVal[0]+"  "+IDAndVal[0]);
+                            }
+                        }
+                    }
+
                 }
 
                 if(method.equals(HttpMethod.PUT)){
@@ -79,7 +96,37 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
         // 注意必须在使用完之后，close channel
         ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
     }
-    
+    private void PostHandleSuccess(ChannelHandlerContext ctx,String Name,String ID){
+        String c= "\r\n<html><title>POST method</title><body bgcolor=ffffff>"+
+                "\r\n Your Name:    "+Name+
+                "\r\n ID:    "+ID+
+                "\r\n<hr><em>HTTP Web server</em>"+
+                "\r\n</body></html>";
+
+        FullHttpResponse resp = new DefaultFullHttpResponse(
+                HttpVersion.HTTP_1_1,
+                HttpResponseStatus.OK,
+                Unpooled.copiedBuffer(c,CharsetUtil.UTF_8));
+        resp.headers().set(HttpHeaderNames.SERVER, "lib'2 Web Server");
+        resp.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html");
+        resp.headers().set(HttpHeaderNames.CONTENT_LANGUAGE, c.length());
+
+        ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
+    }
+    private void postNotFoundError(ChannelHandlerContext ctx){
+        String c= "\r\n<html><title>404 Not Found</title><body bgcolor=ffffff>"+
+                "\r\n Not Found"+
+                "\r\n<hr><em>HTTP Web server</em>"+
+                "\r\n</body></html>";
+        FullHttpResponse resp = new DefaultFullHttpResponse(
+                HttpVersion.HTTP_1_1,
+                HttpResponseStatus.NOT_FOUND,
+                Unpooled.copiedBuffer(c,CharsetUtil.UTF_8));
+        resp.headers().set(HttpHeaderNames.SERVER, "lib'2 Web Server");
+        resp.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html");
+        resp.headers().set(HttpHeaderNames.CONTENT_LANGUAGE, c.length());
+        ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
+    }
     private void PutAnswer(ChannelHandlerContext ctx){
         String c= new String();
         c=      "\r\n<html><title>501 Not Implemented</title><body bgcolor=ffffff>"+

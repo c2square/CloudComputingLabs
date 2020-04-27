@@ -43,7 +43,8 @@ public class MyOkHttpClient {
     public static void PostMethod(String url,String name,String id){
         /**POST方法要构造请求体，使用这种简单的方法就行
          * .add(key,value)
-         * 这代表着xxxxx.com/?key=value*/
+         * 这代表着xxxxx.com/?key=value
+         * */
         RequestBody formBody = new FormBody.Builder()
                 .add("Name", name)
                 .add("ID", id)
