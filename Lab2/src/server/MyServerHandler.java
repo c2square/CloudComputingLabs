@@ -93,7 +93,7 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
                 Unpooled.copiedBuffer(c,CharsetUtil.UTF_8));
         resp.headers().set(HttpHeaderNames.SERVER, "lib'2 Web Server");
         resp.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html");
-        resp.headers().set(HttpHeaderNames.CONTENT_LANGUAGE, "170");
+        resp.headers().set(HttpHeaderNames.CONTENT_LANGUAGE, c.length());
         ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
     }
     private void DeleteAnswer(ChannelHandlerContext ctx){
@@ -109,7 +109,7 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
                 Unpooled.copiedBuffer(d,CharsetUtil.UTF_8));
         resp.headers().set(HttpHeaderNames.SERVER, "lib'2 Web Server");
         resp.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html");
-        resp.headers().set(HttpHeaderNames.CONTENT_LANGUAGE, "170");
+        resp.headers().set(HttpHeaderNames.CONTENT_LANGUAGE, d.length());
         ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
     }
     
