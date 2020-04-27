@@ -69,13 +69,26 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
                     }
 
                 }
-
                 if(method.equals(HttpMethod.PUT)){
-                    PutAnswer(ctx);
+                    ErrorAnswer(ctx,"PUT");
                 }
-
                 if(method.equals(HttpMethod.DELETE)){
-                    DeleteAnswer(ctx);
+                    ErrorAnswer(ctx,"DELETE");
+                }
+                if(method.equals(HttpMethod.OPTIONS)){
+                    ErrorAnswer(ctx,"OPTIONS");
+                }
+                if(method.equals(HttpMethod.HEAD)){
+                    ErrorAnswer(ctx,"HEAD");
+                }
+                if(method.equals(HttpMethod.TRACE)){
+                    ErrorAnswer(ctx,"TRACE");
+                }
+                if(method.equals(HttpMethod.CONNECT)){
+                    ErrorAnswer(ctx,"CONNECT");
+                }
+                else{
+                    postNotFoundError(ctx);
                 }
             } finally {
                 req.release();
@@ -127,11 +140,11 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
         resp.headers().set(HttpHeaderNames.CONTENT_LANGUAGE, c.length());
         ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
     }
-    private void PutAnswer(ChannelHandlerContext ctx){
+    private void ErrorAnswer(ChannelHandlerContext ctx,String d){
         String c= new String();
         c=      "\r\n<html><title>501 Not Implemented</title><body bgcolor=ffffff>"+
                 "\r\n Not Implemented"+
-                "\r\n<p>Does not implement this method: PUT"+
+                "\r\n<p>Does not implement this method: "+d+
                 "\r\n<hr><em>HTTP Web server</em>"+
                 "\r\n</body></html>";
         FullHttpResponse resp = new DefaultFullHttpResponse(
@@ -141,22 +154,6 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
         resp.headers().set(HttpHeaderNames.SERVER, "lib'2 Web Server");
         resp.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html");
         resp.headers().set(HttpHeaderNames.CONTENT_LANGUAGE, c.length());
-        ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
-    }
-    private void DeleteAnswer(ChannelHandlerContext ctx){
-        String d= new String();
-        d=      "\r\n<html><title>501 Not Implemented</title><body bgcolor=ffffff>"+
-                "\r\n Not Implemented"+
-                "\r\n<p>Does not implement this method: DELETE"+
-                "\r\n<hr><em>HTTP Web server</em>"+
-                "\r\n</body></html>";
-        FullHttpResponse resp = new DefaultFullHttpResponse(
-                HttpVersion.HTTP_1_1,
-                HttpResponseStatus.NOT_IMPLEMENTED,
-                Unpooled.copiedBuffer(d,CharsetUtil.UTF_8));
-        resp.headers().set(HttpHeaderNames.SERVER, "lib'2 Web Server");
-        resp.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html");
-        resp.headers().set(HttpHeaderNames.CONTENT_LANGUAGE, d.length());
         ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
     }
     
