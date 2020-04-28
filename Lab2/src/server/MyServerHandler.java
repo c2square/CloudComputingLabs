@@ -2,11 +2,15 @@ package server;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
+import io.netty.handler.ssl.SslHandler;
+import io.netty.handler.stream.ChunkedNioFile;
 import io.netty.util.CharsetUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 
 /**
  * @author csqure
@@ -41,8 +45,8 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
 
                 if(method.equals(HttpMethod.GET)){
                     System.out.println(uri);
-                    postNotFoundError(ctx);
-                    postFile(ctx);
+//                    postNotFoundError(ctx);
+                    postFile(ctx,req);
                     // TODO 
                 }
                 else if(method.equals(HttpMethod.POST)){
@@ -96,17 +100,40 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
         }
     }
 
-    private void postFile(ChannelHandlerContext ctx) {
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        System.out.println(cause);
+    }
 
-        byte[] fileBuf = new byte[0];
-        FullHttpResponse resp = new DefaultFullHttpResponse(
-                HttpVersion.HTTP_1_1,
-                HttpResponseStatus.OK,
-                Unpooled.copiedBuffer(fileBuf));
-        resp.headers().set(HttpHeaderNames.SERVER, "lib'2 Web Server");
+    private void postFile(ChannelHandlerContext ctx,FullHttpRequest req) throws IOException {
+
+        String fileName="index.html";
+        File html = new File(fileName);
+        RandomAccessFile file= new RandomAccessFile(html, "r");
+        HttpResponse response = new DefaultHttpResponse(req.protocolVersion(), HttpResponseStatus.OK);
 
 
-        ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
+        response.headers().set(HttpHeaderNames.SERVER, "lib'2 Web Server");
+        response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html; charset=UTF-8");
+
+        boolean keepAlive = HttpUtil.isKeepAlive(req);
+
+        if (keepAlive) {
+            response.headers().set(HttpHeaderNames.CONTENT_LENGTH, file.length());
+            response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
+        }
+
+        ctx.write(response);
+        if (ctx.pipeline().get(SslHandler.class) == null) {
+            ctx.write(new DefaultFileRegion(file.getChannel(), 0, file.length()));
+        } else {
+            ctx.write(new ChunkedNioFile(file.getChannel()));
+        }
+        ChannelFuture future = ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
+        if (!keepAlive) {
+            future.addListener(ChannelFutureListener.CLOSE);
+        }
+        file.close();
     }
 
     private void PostHandleSuccess(ChannelHandlerContext ctx,String Name,String ID){
