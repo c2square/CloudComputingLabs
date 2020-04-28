@@ -38,34 +38,33 @@ public class MyServerHandler extends SimpleChannelInboundHandler<FullHttpRequest
             HttpMethod method = request.method();
 
 
-            if(method.equals(HttpMethod.GET)){
-                System.out.println(uri);
-                if("/".equals(uri)){
-                        uri+="index.html";
-                        uri=uri.substring(1);
-                        File html = new File(uri);
-                        getFileMethod(ctx,html);
-                }else{//请求路径的解析
-                    String ext=uri.substring(uri.lastIndexOf(".")+1);
-                    uri=uri.substring(1);
-                        File file = new File(uri);
-                        if(file.exists()){
-                            if (!file.isFile()){
-                                file = new File(uri+"/index.html");
-                                if (!file.exists()){
-                                    GetNotFoundError(ctx);
+                if(method.equals(HttpMethod.GET)){
+                    if("/".equals(uri)){
+                            uri+="index.html";
+                            String ext=uri.substring(uri.lastIndexOf(".")+1);//取后缀
+                            uri=uri.substring(1);
+                            File html = new File(uri);
+                            getFileMethod(ctx,html,ext);
+                    }else{//请求路径的解析
+                        String ext=uri.substring(uri.lastIndexOf(".")+1);//取后缀
+                        uri=uri.substring(1);//去除前面的“/”
+                            File file = new File(uri);
+                            if(file.exists()){
+                                if (!file.isFile()){
+                                    file = new File(uri+"/index.html");
+                                    if (!file.exists()){
+                                        GetNotFoundError(ctx,uri);
+                                    }
                                 }
+                                getFileMethod(ctx,file,ext);
                             }
-                            getFileMethod(ctx,file);
-
-                        }
-                        else{
-                            GetNotFoundError(ctx);
-                        }
+                            else{
+                                GetNotFoundError(ctx,uri);
+                            }
+                    }
                 }
-            }
+                else if(method.equals(HttpMethod.POST)){
 
-            else if(method.equals(HttpMethod.POST)){
                 if (!("/Post_show".equals(uri))){
                     postNotFoundError(ctx);
                     System.out.println("uri error "+uri);
@@ -79,6 +78,7 @@ public class MyServerHandler extends SimpleChannelInboundHandler<FullHttpRequest
                         String[] IDAndVal=tmp0[1].split("=");
                         if ("Name".equals(NameAndVal[0])&&"ID".equals(IDAndVal[0])){
                             PostHandleSuccess(ctx, NameAndVal[1],IDAndVal[1]);
+
                         }else {
                             postNotFoundError(ctx);
                             System.out.println("val  error "+NameAndVal[0]+"  "+IDAndVal[0]);
@@ -99,13 +99,25 @@ public class MyServerHandler extends SimpleChannelInboundHandler<FullHttpRequest
         System.out.println(cause);
     }
 
-    private void getFileMethod(ChannelHandlerContext ctx, File html) throws IOException {
+    private void getFileMethod(ChannelHandlerContext ctx, File html,String etc) throws IOException {
 
         RandomAccessFile file= new RandomAccessFile(html, "r");
         HttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 
         response.headers().set(HttpHeaderNames.SERVER, "lib'2 Web Server");
-        response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html; charset=UTF-8");
+        if(etc.equals("html")){
+            response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html; charset=UTF-8");
+        }else if(etc.equals("jpg")||etc.equals("png")){
+            if(etc.equals("jpg")){
+                response.headers().set(HttpHeaderNames.CONTENT_TYPE, "image/jpg");
+            }else if(etc.equals("png")){
+                response.headers().set(HttpHeaderNames.CONTENT_TYPE, "image/png");
+            }
+        }else if(etc.equals("js")){
+            response.headers().set(HttpHeaderNames.CONTENT_TYPE, "application/x-javascript");
+        }else if(etc.equals("css")){
+            response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/css; charset=UTF-8");
+        }
         response.headers().set(HttpHeaderNames.CONTENT_LENGTH, file.length());
 
         ctx.write(response);
@@ -115,9 +127,10 @@ public class MyServerHandler extends SimpleChannelInboundHandler<FullHttpRequest
         file.close();
     }
 
-    private void GetNotFoundError(ChannelHandlerContext ctx){
+    private void GetNotFoundError(ChannelHandlerContext ctx,String url){
         String c= "\r\n<html><title>404 Not Found</title><body bgcolor=ffffff>"+
                 "\r\n Not Found"+
+                "\r\n<p>Couldn't find this file:  ./"+url+"/index.html"+
                 "\r\n<hr><em>HTTP Web server</em>"+
                 "\r\n</body></html>";
         FullHttpResponse resp = new DefaultFullHttpResponse(
