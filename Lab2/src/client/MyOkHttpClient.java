@@ -2,6 +2,7 @@ package client;
 
 import okhttp3.*;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -26,9 +27,12 @@ public class MyOkHttpClient {
          * */
         Call call=client.newCall(request);
         try {
+            Response response=null;
             /**执行并返回结果
              * */
-            Response response=call.execute();
+            for (int i=0;i<100;i++){
+                response=call.execute();
+            }
             /**返回的是回应头和回应体*/
             System.out.println(response.headers()+"\n"+response.body().string());
         } catch (IOException e) {
@@ -92,7 +96,7 @@ public class MyOkHttpClient {
     }
     public static void main(String[] args) throws IOException {
 
-//        GetMethod("https://www.cnblogs.com/skins/codinglife/images/body_bg.png");
+//        GetMethod("http://127.0.0.1:7397");
 //        PostMethod("http://127.0.0.1:7397/Post_show","HNU","cs1024");
 //        PutMethod("http://127.0.0.1:7397");
 
@@ -100,7 +104,7 @@ public class MyOkHttpClient {
 //        Runnable myThread = () -> {
 //            for (int i = 0; i < 100; i++) {
 //                System.out.println(i);
-//                GetMethod("http://www.baidu.com");
+//                GetMethod("http://127.0.0.1:7397");
 //            }
 //        };
 //        // 向线程池中提交两个线程
@@ -108,6 +112,8 @@ public class MyOkHttpClient {
 //        pool.submit(myThread);
 //        // 关闭线程池
 //        pool.shutdown();
+        File html = new File("Lab2");
+        System.out.println(html.isFile());
     }
 
 }
