@@ -15,7 +15,7 @@ import java.io.RandomAccessFile;
 /**
  * @author csqure
  */
-public class MyServerHandler extends ChannelInboundHandlerAdapter {
+public class MyServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -28,76 +28,68 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        if(msg instanceof FullHttpRequest){
-            FullHttpRequest req = (FullHttpRequest)msg;
-            try {
-                // 1.获取URI
-                String uri = req.uri();
-                // 2.获取请求体
-                ByteBuf buf = req.content();
-                String content = buf.toString(CharsetUtil.UTF_8);
-                // 3.获取请求方法
-                HttpMethod method = req.method();
-                // 4.获取请求头
-                HttpHeaders headers = req.headers();
-                // 5.根据method，确定不同的逻辑
+    public void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
+            // 1.获取URI
+            String uri = request.uri();
+            // 2.获取请求体
+            ByteBuf buf = request.content();
+            String content = buf.toString(CharsetUtil.UTF_8);
+            // 3.获取请求方法
+            HttpMethod method = request.method();
+            // 4.获取请求头
+            HttpHeaders headers = request.headers();
+            // 5.根据method，确定不同的逻辑
 
-                if(method.equals(HttpMethod.GET)){
-                    System.out.println(uri);
+            if(method.equals(HttpMethod.GET)){
+                System.out.println(uri);
 //                    postNotFoundError(ctx);
-                    postFile(ctx,req);
-                    // TODO 
-                }
-                else if(method.equals(HttpMethod.POST)){
+                postFile(ctx,request);
+            }
+            else if(method.equals(HttpMethod.POST)){
 
-                    if (!("/Post_show".equals(uri))){
+                if (!("/Post_show".equals(uri))){
+                    postNotFoundError(ctx);
+                    System.out.println("uri error "+uri);
+                }else {
+                    String[] tmp0=content.split("&");
+                    if (tmp0.length!=2){
                         postNotFoundError(ctx);
-                        System.out.println("uri error "+uri);
+                        System.out.println("val length error"+content);
                     }else {
-                        String[] tmp0=content.split("&");
-                        if (tmp0.length!=2){
-                            postNotFoundError(ctx);
-                            System.out.println("val length error"+content);
-                        }else {
-                            String[] NameAndVal=tmp0[0].split("=");
-                            String[] IDAndVal=tmp0[1].split("=");
-                            if ("Name".equals(NameAndVal[0])&&"ID".equals(IDAndVal[0])){
-                                PostHandleSuccess(ctx, NameAndVal[1],IDAndVal[1]);
+                        String[] NameAndVal=tmp0[0].split("=");
+                        String[] IDAndVal=tmp0[1].split("=");
+                        if ("Name".equals(NameAndVal[0])&&"ID".equals(IDAndVal[0])){
+                            PostHandleSuccess(ctx, NameAndVal[1],IDAndVal[1]);
 
-                            }else {
-                                postNotFoundError(ctx);
-                                System.out.println("val  error "+NameAndVal[0]+"  "+IDAndVal[0]);
-                            }
+                        }else {
+                            postNotFoundError(ctx);
+                            System.out.println("val  error "+NameAndVal[0]+"  "+IDAndVal[0]);
                         }
                     }
+                }
 
-                }
-                else if(method.equals(HttpMethod.PUT)){
-                    ErrorAnswer(ctx,"PUT");
-                }
-                else if(method.equals(HttpMethod.DELETE)){
-                    ErrorAnswer(ctx,"DELETE");
-                }
-                else if(method.equals(HttpMethod.OPTIONS)){
-                    ErrorAnswer(ctx,"OPTIONS");
-                }
-                else if(method.equals(HttpMethod.HEAD)){
-                    ErrorAnswer(ctx,"HEAD");
-                }
-                else if(method.equals(HttpMethod.TRACE)){
-                    ErrorAnswer(ctx,"TRACE");
-                }
-                else if(method.equals(HttpMethod.CONNECT)){
-                    ErrorAnswer(ctx,"CONNECT");
-                }
-                else{
-                    postNotFoundError(ctx);
-                }
-            } finally {
-                req.release();
             }
-        }
+            else if(method.equals(HttpMethod.PUT)){
+                ErrorAnswer(ctx,"PUT");
+            }
+            else if(method.equals(HttpMethod.DELETE)){
+                ErrorAnswer(ctx,"DELETE");
+            }
+            else if(method.equals(HttpMethod.OPTIONS)){
+                ErrorAnswer(ctx,"OPTIONS");
+            }
+            else if(method.equals(HttpMethod.HEAD)){
+                ErrorAnswer(ctx,"HEAD");
+            }
+            else if(method.equals(HttpMethod.TRACE)){
+                ErrorAnswer(ctx,"TRACE");
+            }
+            else if(method.equals(HttpMethod.CONNECT)){
+                ErrorAnswer(ctx,"CONNECT");
+            }
+            else{
+                postNotFoundError(ctx);
+            }
     }
 
     @Override
