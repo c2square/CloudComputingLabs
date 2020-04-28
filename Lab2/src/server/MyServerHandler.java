@@ -1,6 +1,5 @@
 package server;
 
-import com.alibaba.fastjson.JSONObject;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
@@ -41,11 +40,12 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
                 // 5.根据method，确定不同的逻辑
 
                 if(method.equals(HttpMethod.GET)){
-
+                    System.out.println(uri);
+                    postNotFoundError(ctx);
+                    postFile(ctx);
                     // TODO 
                 }
-
-                if(method.equals(HttpMethod.POST)){
+                else if(method.equals(HttpMethod.POST)){
 
                     if (!("/Post_show".equals(uri))){
                         postNotFoundError(ctx);
@@ -69,22 +69,22 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
                     }
 
                 }
-                if(method.equals(HttpMethod.PUT)){
+                else if(method.equals(HttpMethod.PUT)){
                     ErrorAnswer(ctx,"PUT");
                 }
-                if(method.equals(HttpMethod.DELETE)){
+                else if(method.equals(HttpMethod.DELETE)){
                     ErrorAnswer(ctx,"DELETE");
                 }
-                if(method.equals(HttpMethod.OPTIONS)){
+                else if(method.equals(HttpMethod.OPTIONS)){
                     ErrorAnswer(ctx,"OPTIONS");
                 }
-                if(method.equals(HttpMethod.HEAD)){
+                else if(method.equals(HttpMethod.HEAD)){
                     ErrorAnswer(ctx,"HEAD");
                 }
-                if(method.equals(HttpMethod.TRACE)){
+                else if(method.equals(HttpMethod.TRACE)){
                     ErrorAnswer(ctx,"TRACE");
                 }
-                if(method.equals(HttpMethod.CONNECT)){
+                else if(method.equals(HttpMethod.CONNECT)){
                     ErrorAnswer(ctx,"CONNECT");
                 }
                 else{
@@ -96,19 +96,19 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
         }
     }
 
-    private void response(ChannelHandlerContext ctx, Content c) {
-        // 1.设置响应
+    private void postFile(ChannelHandlerContext ctx) {
+
+        byte[] fileBuf = new byte[0];
         FullHttpResponse resp = new DefaultFullHttpResponse(
                 HttpVersion.HTTP_1_1,
                 HttpResponseStatus.OK,
-                Unpooled.copiedBuffer(JSONObject.toJSONString(c), CharsetUtil.UTF_8));
+                Unpooled.copiedBuffer(fileBuf));
+        resp.headers().set(HttpHeaderNames.SERVER, "lib'2 Web Server");
 
-        resp.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html; charset=UTF-8");
 
-        // 2.发送
-        // 注意必须在使用完之后，close channel
         ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
     }
+
     private void PostHandleSuccess(ChannelHandlerContext ctx,String Name,String ID){
         String c= "\r\n<html><title>POST method</title><body bgcolor=ffffff>"+
                 "\r\n Your Name:    "+Name+
@@ -157,42 +157,4 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
         ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
     }
     
-    class Content{
-        String uri;
-        String content;
-        String Name;
-        String ID;
-
-        public String getUri() {
-            return uri;
-        }
-
-        public void setUri(String uri) {
-            this.uri = uri;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public void setContent(String content) {
-            this.content = content;
-        }
-
-        public String getName() {
-            return Name;
-        }
-
-        public void setName(String name) {
-            Name = name;
-        }
-
-        public String getID() {
-            return ID;
-        }
-
-        public void setID(String ID) {
-            this.ID = ID;
-        }
-    }
 }

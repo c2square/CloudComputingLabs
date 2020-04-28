@@ -2,6 +2,7 @@ package client;
 
 import okhttp3.*;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -92,8 +93,8 @@ public class MyOkHttpClient {
     }
     public static void main(String[] args) {
 
-//        GetMethod("http://127.0.0.1:7397");
-        PostMethod("http://127.0.0.1:7397/Post_show","HNU","cs1024");
+//        GetMethod("https://www.cnblogs.com/skins/codinglife/images/body_bg.png");
+//        PostMethod("http://127.0.0.1:7397/Post_show","HNU","cs1024");
 //        PutMethod("http://127.0.0.1:7397");
 
 //        ExecutorService pool = Executors.newFixedThreadPool(6);
@@ -108,5 +109,38 @@ public class MyOkHttpClient {
 //        pool.submit(myThread);
 //        // 关闭线程池
 //        pool.shutdown();
+        MyOkHttpClient myOkHttpClient=new MyOkHttpClient();
+        myOkHttpClient.fileTest();
     }
+    public void fileTest(){
+        String fileName="index.html";
+        File file = new File(fileName);
+//        RandomAccessFile file1=new RandomAccessFile(fileName)
+        System.out.println(file.exists());
+    }
+//    private static String sanitizeUri(String uri) {
+//        // Decode the path.
+//        try {
+//            uri = URLDecoder.decode(uri, "UTF-8");
+//        } catch (UnsupportedEncodingException e) {
+//            throw new Error(e);
+//        }
+//
+//        if (!uri.startsWith("/")) {
+//            return null;
+//        }
+//
+//        // Convert file separators.
+//        uri = uri.replace('/', File.separatorChar);
+//
+//        // Simplistic dumb security check.
+//        // You will have to do something serious in the production environment.
+//        if (uri.contains(File.separator + '.') || uri.contains('.' + File.separator) || uri.startsWith(".") || uri.endsWith(".")
+//                || INSECURE_URI.matcher(uri).matches()) {
+//            return null;
+//        }
+//
+//        // Convert to absolute path.
+//        return SystemPropertyUtil.get("user.dir") + File.separator + uri;
+//    }
 }
