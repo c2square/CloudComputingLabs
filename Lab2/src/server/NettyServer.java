@@ -13,20 +13,25 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 public class NettyServer {
 
     public static void main(String[] args) {
-        new NettyServer().bing(7397);
+        new NettyServer().bing(args[0],new Integer(args[1]),new Integer(args[2]));
     }
 
-    private void bing(int port) {
+    private void bing(String addr,int port,int threadNum) {
         //配置服务端NIO线程组
-        EventLoopGroup parentGroup = new NioEventLoopGroup();
-        EventLoopGroup childGroup = new NioEventLoopGroup();
+        int father=1,son=1;
+        if(threadNum>1){
+            father=threadNum/2;
+            son=(threadNum+1)/2;
+        }
+        EventLoopGroup parentGroup = new NioEventLoopGroup(father);
+        EventLoopGroup childGroup = new NioEventLoopGroup(son);
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(parentGroup, childGroup)
                     .channel(NioServerSocketChannel.class)
-                    .option(ChannelOption.SO_BACKLOG, 128)
+                    .option(ChannelOption.SO_BACKLOG, Integer.MAX_VALUE)
                     .childHandler(new MyChannelInitializer());
-            ChannelFuture f = b.bind(port).sync();
+            ChannelFuture f = b.bind(addr,port).sync();
 
             f.channel().closeFuture().sync();
         } catch (InterruptedException e) {
@@ -35,7 +40,5 @@ public class NettyServer {
             childGroup.shutdownGracefully();
             parentGroup.shutdownGracefully();
         }
-
     }
-
 }
