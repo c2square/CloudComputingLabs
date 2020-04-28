@@ -91,7 +91,7 @@
 
 图二：
 
-<img src="Lab2 Test Report.assets/Z0XAOZ1RN24V3%S}CTYCBDE.png" style="zoom: 80%;" />
+<img src="Lab2 Test Report.assets/tu2.png" style="zoom: 80%;"/>
 
 图三：
 
