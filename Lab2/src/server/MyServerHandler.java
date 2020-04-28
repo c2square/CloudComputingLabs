@@ -4,8 +4,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
-import io.netty.handler.ssl.SslHandler;
-import io.netty.handler.stream.ChunkedNioFile;
 import io.netty.util.CharsetUtil;
 
 import java.io.File;
@@ -40,12 +38,34 @@ public class MyServerHandler extends SimpleChannelInboundHandler<FullHttpRequest
             HttpHeaders headers = request.headers();
             // 5.根据method，确定不同的逻辑
 
-            if(method.equals(HttpMethod.GET)){
-                System.out.println(uri);
-//                    postNotFoundError(ctx);
-                postFile(ctx,request);
-            }
-            else if(method.equals(HttpMethod.POST)){
+                if(method.equals(HttpMethod.GET)){
+                    System.out.println(uri);
+                    if("/".equals(uri)){
+                            uri+="index.html";
+                            uri=uri.substring(1);
+                            File html = new File(uri);
+                            getFileMethod(ctx,html);
+                    }else{//请求路径的解析
+                        String ext=uri.substring(uri.lastIndexOf(".")+1);//取后缀
+                        uri=uri.substring(1);//去除前面的“/”
+                            File file = new File(uri);
+                            if(file.exists()){
+                                if (!file.isFile()){
+                                    file = new File(uri+"/index.html");
+                                    if (!file.exists()){
+                                        GetNotFoundError(ctx);
+                                    }
+                                }
+                                getFileMethod(ctx,file);
+
+                            }
+                            else{
+                                GetNotFoundError(ctx);
+                            }
+                    }
+                    // TODO 
+                }
+                else if(method.equals(HttpMethod.POST)){
 
                 if (!("/Post_show".equals(uri))){
                     postNotFoundError(ctx);
@@ -90,42 +110,43 @@ public class MyServerHandler extends SimpleChannelInboundHandler<FullHttpRequest
             else{
                 postNotFoundError(ctx);
             }
-    }
+        }
+
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         System.out.println(cause);
     }
 
-    private void postFile(ChannelHandlerContext ctx,FullHttpRequest req) throws IOException {
+    private void getFileMethod(ChannelHandlerContext ctx, File html) throws IOException {
 
-        String fileName="index.html";
-        File html = new File(fileName);
         RandomAccessFile file= new RandomAccessFile(html, "r");
-        HttpResponse response = new DefaultHttpResponse(req.protocolVersion(), HttpResponseStatus.OK);
-
+        HttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 
         response.headers().set(HttpHeaderNames.SERVER, "lib'2 Web Server");
         response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html; charset=UTF-8");
-
-        boolean keepAlive = HttpUtil.isKeepAlive(req);
-
-        if (keepAlive) {
-            response.headers().set(HttpHeaderNames.CONTENT_LENGTH, file.length());
-            response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
-        }
+        response.headers().set(HttpHeaderNames.CONTENT_LENGTH, file.length());
 
         ctx.write(response);
-        if (ctx.pipeline().get(SslHandler.class) == null) {
-            ctx.write(new DefaultFileRegion(file.getChannel(), 0, file.length()));
-        } else {
-            ctx.write(new ChunkedNioFile(file.getChannel()));
-        }
+        ctx.write(new DefaultFileRegion(file.getChannel(), 0, file.length()));
         ChannelFuture future = ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
-        if (!keepAlive) {
-            future.addListener(ChannelFutureListener.CLOSE);
-        }
+        future.addListener(ChannelFutureListener.CLOSE);
         file.close();
+    }
+
+    private void GetNotFoundError(ChannelHandlerContext ctx){
+        String c= "\r\n<html><title>404 Not Found</title><body bgcolor=ffffff>"+
+                "\r\n Not Found"+
+                "\r\n<hr><em>HTTP Web server</em>"+
+                "\r\n</body></html>";
+        FullHttpResponse resp = new DefaultFullHttpResponse(
+                HttpVersion.HTTP_1_1,
+                HttpResponseStatus.NOT_FOUND,
+                Unpooled.copiedBuffer(c,CharsetUtil.UTF_8));
+        resp.headers().set(HttpHeaderNames.SERVER, "lib'2 Web Server");
+        resp.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html");
+        resp.headers().set(HttpHeaderNames.CONTENT_LANGUAGE, c.length());
+        ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
     }
 
     private void PostHandleSuccess(ChannelHandlerContext ctx,String Name,String ID){
