@@ -87,15 +87,15 @@
 
 图一：
 
-![img](file:///C:\Users\18304\AppData\Roaming\Tencent\Users\183042120\QQ\WinTemp\RichOle\CZ@7[O3WJ5MLSVI$8[3MYKO.png)
+<img src="Lab2 Test Report.assets/CZ@7[O3WJ5MLSVI$8[3MYKO.png" style="zoom: 80%;" />
 
 图二：
 
-![img](file:///C:\Users\18304\AppData\Roaming\Tencent\Users\183042120\QQ\WinTemp\RichOle\Z0XAOZ1RN24V3%S}CTYCBDE.png)
+<img src="Lab2 Test Report.assets/Z0XAOZ1RN24V3%S}CTYCBDE.png" style="zoom: 80%;" />
 
 图三：
 
-![img](file:///C:\Users\18304\AppData\Roaming\Tencent\Users\183042120\QQ\WinTemp\RichOle\}HSEF[652I[O~Q[KMPI~NQ4.png)
+<img src="Lab2 Test Report.assets/82U56K7F~P1$~]5XXB0[1Y3.png" style="zoom: 80%;" />
 
 
 
